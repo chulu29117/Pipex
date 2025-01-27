@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 15:08:55 by clu               #+#    #+#              #
-#    Updated: 2025/01/15 16:50:42 by clu              ###   ########.fr        #
+#    Updated: 2025/01/27 21:31:05 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,8 +29,11 @@ SOURCES =	ft_atoi.c				ft_atol.c				ft_atoll.c				\
 			ft_putnbr_fd.c			ft_lstnew_bonus.c		ft_lstadd_front_bonus.c	\
 			ft_lstsize_bonus.c		ft_lstlast_bonus.c		ft_lstadd_back_bonus.c	\
 			ft_lstdelone_bonus.c	ft_lstclear_bonus.c		ft_lstiter_bonus.c		\
-			ft_lstmap_bonus.c		get_next_line.c			ft_printf.c
-
+			ft_lstmap_bonus.c		get_next_line.c			ft_printf.c				\
+			ft_format_check.c		ft_putchar.c			ft_putstr.c				\
+			ft_putnbr.c				ft_putnbr_i.c			ft_puthex.c				\
+			ft_puthex_low.c			ft_puthex_up.c			ft_putptr.c				\
+						
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(NAME)

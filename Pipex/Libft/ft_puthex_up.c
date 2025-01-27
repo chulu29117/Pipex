@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_puthex_up.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/01/27 21:22:01 by clu              ###   ########.fr       */
+/*   Created: 2024/11/18 12:50:11 by clu               #+#    #+#             */
+/*   Updated: 2025/01/27 21:30:23 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	PIPEX_H
-# define PIPEX_H
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "libft.h"
 
-#endif
+int	ft_puthex_up(unsigned int n)
+{
+	int		count;
+	char	*hex_digits;
+
+	hex_digits = "0123456789ABCDEF";
+	count = 0;
+	if (n >= 16)
+		count += ft_puthex_up(n / 16);
+	count += ft_putchar(hex_digits[n % 16]);
+	return (count);
+}

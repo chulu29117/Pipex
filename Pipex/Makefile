@@ -6,12 +6,12 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/01/15 16:54:09 by clu              ###   ########.fr        #
+#    Updated: 2025/01/27 21:43:00 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Program Name
-NAME = pipex.a
+NAME = pipex
 
 # Comiler and Flags
 CC 		= cc
@@ -25,16 +25,15 @@ LIBFT_DIR 	= Libft
 # Libraries
 LIBFT = $(LIBFT_DIR)/libft.a
 
-
 # Source files
-SRC = src/pipex.c \
+SRC = 	main.c \
+		pipex.c \
+		pipex_utils_1.c \
+		pipex_utils_2.c \
+		pipex_utils_3.c \
+		pipex_error.c
 
-
-
-
-
-
-
+SRC := $(addprefix $(SRC_DIR)/, $(SRC))
 OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 all: $(NAME)
