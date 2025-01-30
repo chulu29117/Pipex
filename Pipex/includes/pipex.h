@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/01/28 14:53:25 by clu              ###   ########.fr       */
+/*   Updated: 2025/01/30 22:25:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <string.h>
+# include <errno.h>
 # include "libft.h"
 
 // Struct holding pipex data
@@ -37,10 +38,12 @@ void	sys_error(const char *message);
 void	exec_cmd(char *cmd, char **envp);
 void	first_child(t_pipex *pipex, char *cmd, char **envp);
 void	second_child(t_pipex *pipex, char *cmd, char **envp);
-void	close_pipes_and_wait(t_pipex *pipex);
+void	exec_pipe(t_pipex *pipex);
 
-char	**split_command(char *cmd);
-void	free_array(char **array);
+char	**split_cmd(char *cmd);
 char	*find_path(char *cmd, char **envp);
+
+void	init_pipex(t_pipex *pipex, char **argv);
+void	process(t_pipex *pipex, char **argv, char **envp);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/01/27 21:43:00 by clu              ###   ########.fr        #
+#    Updated: 2025/01/30 22:17:18 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 # Source files
 SRC = 	main.c \
 		pipex.c \
-		pipex_utils_1.c \
+		get_args.c \
 		pipex_utils_2.c \
 		pipex_utils_3.c \
 		pipex_error.c

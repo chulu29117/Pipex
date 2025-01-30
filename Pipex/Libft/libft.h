@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 15:03:13 by clu               #+#    #+#             */
-/*   Updated: 2025/01/15 16:44:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/01/30 22:12:35 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
 void		ft_striteri(char *s, void (*f)(unsigned int, char *));
 void		ft_free_split(char **split);
+void		ft_free_array(char **array);
 
 // Linked list functions
 int			ft_lstsize(t_list *lst);
