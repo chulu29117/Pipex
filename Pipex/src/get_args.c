@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/01/30 22:24:54 by clu              ###   ########.fr       */
+/*   Updated: 2025/01/30 22:36:13 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,21 @@ static int	count_words(char *cmd)
 	{
 		if (cmd[i] == '\'' || cmd[i] == '\"')
 			quotes = !quotes;
-		if (!is_whitespace(cmd[i]) && (i == 0 || is_whitespace(cmd[i - 1])) && !quotes)
-			count++;
+		if (!is_whitespace(cmd[i]) && !quotes)
+		{
+			if (i == 0 || is_whitespace(cmd[i - 1]))
+				count++;
+		}
 		i++;
 	}
 	return (count);
 }
 
-static char	*extract_str(char *cmd, int *i)
+static char	*get_str(char *cmd, int *i)
 {
 	int		start;
 	int		len;
 	char	quote;
-	char	*str;
 
 	while (is_whitespace(cmd[*i]))
 		(*i)++;
@@ -55,7 +57,8 @@ static char	*extract_str(char *cmd, int *i)
 		while (cmd[*i] && cmd[*i] != quote)
 			(*i)++;
 		len = *i - start;
-		(*i)++;
+		if (cmd[*i])
+			(*i)++;
 	}
 	else
 	{
@@ -63,8 +66,7 @@ static char	*extract_str(char *cmd, int *i)
 			(*i)++;
 		len = *i - start;
 	}
-	str = ft_substr(cmd, start, len);
-	return (str);
+	return (ft_substr(cmd, start, len));
 }
 
 char	**split_cmd(char *cmd)
@@ -87,7 +89,7 @@ char	**split_cmd(char *cmd)
 			i++;
 		if (cmd[i])
 		{
-			str = extract_token(cmd, &i);
+			str = get_str(cmd, &i);
 			substr[word_index++] = str;
 		}
 	}
@@ -102,6 +104,8 @@ char	*find_path(char *cmd, char **envp)
 	char	*full_path;
 	int		i;
 
+	if (!envp || !*envp)
+		return (NULL);
 	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
 		envp++;
 	if (!*envp)

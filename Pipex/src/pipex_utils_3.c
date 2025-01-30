@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:59 by clu               #+#    #+#             */
-/*   Updated: 2025/01/30 21:44:03 by clu              ###   ########.fr       */
+/*   Updated: 2025/01/30 22:31:58 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	init_pipex(t_pipex *pipex, char **argv)
 		pipex->infile = open("/dev/null", O_RDONLY);
 		if (pipex->infile == -1)
 		{
-			sys_error("Error: Unable to open /dev/null");
+			sys_error("/dev/null");
 			exit(1);
 		}
 	}
