@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_args.c                                         :+:      :+:    :+:   */
+/*   split_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/01/30 22:36:13 by clu              ###   ########.fr       */
+/*   Updated: 2025/01/31 10:10:14 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,33 +95,4 @@ char	**split_cmd(char *cmd)
 	}
 	substr[word_index] = NULL;
 	return (substr);
-}
-
-char	*find_path(char *cmd, char **envp)
-{
-	char	**paths;
-	char	*path;
-	char	*full_path;
-	int		i;
-
-	if (!envp || !*envp)
-		return (NULL);
-	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
-		envp++;
-	if (!*envp)
-		return (NULL);
-	paths = ft_split(*envp + 5, ':');
-	i = 0;
-	while (paths[i])
-	{
-		path = ft_strjoin(paths[i], "/");
-		full_path = ft_strjoin(path, cmd);
-		free(path);
-		if (access(full_path, X_OK) == 0)
-			return (ft_free_array(paths), full_path);
-		free(full_path);
-		i++;
-	}
-	ft_free_array(paths);
-	return (NULL);
 }

@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/01/30 22:17:18 by clu              ###   ########.fr        #
+#    Updated: 2025/01/31 14:49:16 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,11 +26,11 @@ LIBFT_DIR 	= Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # Source files
-SRC = 	main.c \
-		pipex.c \
-		get_args.c \
-		pipex_utils_2.c \
-		pipex_utils_3.c \
+SRC = 	pipex.c \
+		split_cmd.c \
+		get_path.c \
+		exec_cmd_pipe.c \
+		init_process.c \
 		pipex_error.c
 
 SRC := $(addprefix $(SRC_DIR)/, $(SRC))
