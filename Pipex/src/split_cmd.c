@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/01/31 10:10:14 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/03 12:23:42 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ char	**split_cmd(char *cmd)
 
 	word_count = count_words(cmd);
 	substr = malloc(sizeof(char *) * (word_count + 1));
-	if (!substr)
-		return (NULL);
+	if (!substr || !substr[0])
+		return (free(substr), NULL);
 	i = 0;
 	word_index = 0;
 	while (cmd[i])

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils_3.c                                    :+:      :+:    :+:   */
+/*   init_process.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:59 by clu               #+#    #+#             */
-/*   Updated: 2025/01/30 22:31:58 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/03 13:46:33 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	init_pipex(t_pipex *pipex, char **argv)
 {
 	if (argv[2][0] == '\0' || argv[3][0] == '\0')
-		sys_error("Error: Invalid empty command");
+		sys_error("invalid empty command");
 	pipex->infile = open(argv[1], O_RDONLY);
 	if (pipex->infile == -1)
 	{
-		sys_error("Error: Unable to open input file");
+		sys_error(argv[1]);
 		pipex->infile = open("/dev/null", O_RDONLY);
 		if (pipex->infile == -1)
 		{
@@ -30,12 +30,12 @@ void	init_pipex(t_pipex *pipex, char **argv)
 	pipex->outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->outfile == -1)
 	{
-		sys_error("Error: Unable to open/create output file");
+		sys_error(argv[4]);
 		pipex->outfile = -1;
 	}
 	if (pipe(pipex->pipe_fds) == -1)
 	{
-		sys_error("Error: Pipe failed");
+		sys_error("Pipe failed");
 		exit(1);
 	}
 }
@@ -45,7 +45,7 @@ void	process(t_pipex *pipex, char **argv, char **envp)
 	pipex->pid1 = fork();
 	if (pipex->pid1 == -1)
 	{
-		sys_error("Error: Fork failed");
+		sys_error("Fork failed");
 		exit(1);
 	}
 	if (pipex->pid1 == 0)
@@ -53,7 +53,7 @@ void	process(t_pipex *pipex, char **argv, char **envp)
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
 	{
-		sys_error("Error: Fork failed");
+		sys_error("Fork failed");
 		exit(1);
 	}
 	if (pipex->pid2 == 0)

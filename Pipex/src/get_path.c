@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/01/31 10:14:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/03 12:04:40 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*find_path(char *cmd, char **envp)
 	i = 0;
 	while (paths[i])
 	{
-		if (paths[i][ft_strlen(paths[i] - 1)] == '/')
+		if (paths[i][ft_strlen(paths[i]) - 1] == '/')
 			full_path = ft_strjoin(paths[i], cmd);
 		else
 		{
