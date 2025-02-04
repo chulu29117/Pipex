@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 18:29:28 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 10:22:53 by clu              ###   ########.fr       */
+/*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
+/*   Updated: 2025/02/04 10:22:28 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int	main(int argc, char **argv, char **envp)
+void	exec_cmd(char *cmd, char **envp)
 {
-	t_pipex	pipex;
+	char	**args;
+	char	*path;
 
-	if (argc != 5)
-		pipex_error("Usage: ./pipex file1 cmd1 cmd2 file2");
-	init_pipex(&pipex, argv, envp);
-	exec_pipex(&pipex);
-	return (0);
+	args = split_cmd(cmd);
+	if (!args)
+		pipex_error("Command parse failed");
+	path = find_path(args[0], envp);
+	if (!path)
+		pipex_error("Command not found");
+	if (execve(path, args, envp) == -1)
+		pipex_error("Execution failed");
 }

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/03 12:23:42 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/03 22:14:08 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,52 +21,74 @@ static int	count_words(char *cmd)
 {
 	int		i;
 	int		count;
-	int		quotes;
+	char	quote;
+	int		in_word;
 
 	i = 0;
 	count = 0;
-	quotes = 0;
+	quote = 0;
+	in_word = 0;
 	while (cmd[i])
 	{
-		if (cmd[i] == '\'' || cmd[i] == '\"')
-			quotes = !quotes;
-		if (!is_whitespace(cmd[i]) && !quotes)
+		if ((cmd[i] == '\'' || cmd[i] == '\"') && (!quote || quote == cmd[i]))
 		{
-			if (i == 0 || is_whitespace(cmd[i - 1]))
-				count++;
+			if (quote == 0)
+				quote = cmd[i];
+			else
+				quote = 0;
 		}
+		if (!is_whitespace(cmd[i]) && quote != 0)
+		{
+			if (in_word == 0)
+				count++;
+			in_word = 1;
+		}
+		else
+			in_word = 0;
 		i++;
 	}
 	return (count);
 }
 
-static char	*get_str(char *cmd, int *i)
+static char	*extract_str(char *cmd, int *i, char quote)
 {
 	int		start;
 	int		len;
+
+	start = *i;
+	len = 0;
+	if (quote)
+	{
+		start++;
+		(*i)++;
+	}
+	while (cmd[*i])
+	{
+		if (quote)
+		{
+			if (cmd[*i] == quote)
+				break;
+		}
+		else if (is_whitespace(cmd[*i]))
+			break;
+		(*i)++;
+		len++;
+	}
+	if (quote && cmd[*i])
+		(*i)++;
+	return (ft_substr(cmd, start, len));
+}
+
+static char	*get_str(char *cmd, int *i)
+{
 	char	quote;
 
 	while (is_whitespace(cmd[*i]))
 		(*i)++;
-	start = *i;
+	quote = 0;
 	if (cmd[*i] == '\'' || cmd[*i] == '\"')
-	{
 		quote = cmd[*i];
-		start++;
-		(*i)++;
-		while (cmd[*i] && cmd[*i] != quote)
-			(*i)++;
-		len = *i - start;
-		if (cmd[*i])
-			(*i)++;
-	}
-	else
-	{
-		while (cmd[*i] && !is_whitespace(cmd[*i]))
-			(*i)++;
-		len = *i - start;
-	}
-	return (ft_substr(cmd, start, len));
+	return (extract_str(cmd, i, quote));
 }
 
 char	**split_cmd(char *cmd)
@@ -75,22 +97,21 @@ char	**split_cmd(char *cmd)
 	int		i;
 	int		word_count;
 	int		word_index;
-	char	*str;
 
 	word_count = count_words(cmd);
 	substr = malloc(sizeof(char *) * (word_count + 1));
-	if (!substr || !substr[0])
-		return (free(substr), NULL);
+	if (!substr)
+		return (NULL);
 	i = 0;
 	word_index = 0;
 	while (cmd[i])
 	{
 		while (is_whitespace(cmd[i]))
 			i++;
-		if (cmd[i])
+		if (cmd[i] != '\0')
 		{
-			str = get_str(cmd, &i);
-			substr[word_index++] = str;
+			substr[word_index] = get_str(cmd, &i);
+			word_count++;
 		}
 	}
 	substr[word_index] = NULL;

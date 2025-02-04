@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/01/31 14:49:16 by clu              ###   ########.fr        #
+#    Updated: 2025/02/04 09:46:51 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,8 @@ LIBFT = $(LIBFT_DIR)/libft.a
 SRC = 	pipex.c \
 		split_cmd.c \
 		get_path.c \
-		exec_cmd_pipe.c \
+		exec_cmd.c \
+		exec_pipe.c \
 		init_process.c \
 		pipex_error.c
 

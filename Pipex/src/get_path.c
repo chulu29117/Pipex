@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/02/03 12:04:40 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 10:22:37 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,27 @@
 
 char	*find_path(char *cmd, char **envp)
 {
-	char	**paths;
-	char	*path;
-	char	*full_path;
 	int		i;
+	char	**paths;
+	char	*full_path;
+	char	*temp;
 
-	if (!envp || !*envp)
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	if (!envp[i])
 		return (NULL);
-	while (*envp && ft_strncmp(*envp, "PATH=", 5) != 0)
-		envp++;
-	if (!*envp)
-		return (NULL);
-	paths = ft_split(*envp + 5, ':');
-	if (!paths)
-		return (NULL);
+	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
 	while (paths[i])
 	{
-		if (paths[i][ft_strlen(paths[i]) - 1] == '/')
-			full_path = ft_strjoin(paths[i], cmd);
-		else
-		{
-			path = ft_strjoin(paths[i], "/");
-			full_path = ft_strjoin(path, cmd);
-			free(path);
-		}
+		temp = ft_strjoin(paths[i], "/");
+		full_path = ft_strjoin(temp, cmd);
+		free(temp);
 		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_array(paths);
 			return (full_path);
-		}
 		free(full_path);
 		i++;
 	}
-	ft_free_array(paths);
 	return (NULL);
 }
