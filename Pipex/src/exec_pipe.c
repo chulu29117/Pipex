@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 10:29:02 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 11:26:25 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,20 @@ void	first_child(t_pipex *pipex)
 
 void	second_child(t_pipex *pipex)
 {
-	dup2(pipex->pipe_fds[0], STDIN_FILENO);
-	dup2(pipex->outfile, STDOUT_FILENO);
+	if (dup2(pipex->pipe_fds[0], STDIN_FILENO) == -1)
+	{
+		perror("DEBUG: dup2 input failed");
+		exit(1);
+	}
+	if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
+	{
+		perror("DEBUG: dup2 output failed");
+		exit(1);
+	}
 	close(pipex->pipe_fds[1]);
 	close(pipex->outfile);
 	exec_cmd(pipex->cmd2, pipex->envp);
+	exit(1);
 }
 
 void	exec_pipex(t_pipex *pipex)

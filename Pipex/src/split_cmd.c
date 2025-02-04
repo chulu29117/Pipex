@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 10:34:48 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 10:57:47 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,35 @@
 
 static int	is_whitespace(char c)
 {
-	return (c == ' ' || c == '\t' || c == '\n');
+	if (c == ' ' || c == '\t' || c == '\n')
+		return (1);
+	return (0);
 }
 
 static int	count_words(char *cmd)
 {
 	int		i;
 	int		count;
-	char	quote;
 	int		in_word;
+	char	quote;
 
 	i = 0;
 	count = 0;
-	quote = 0;
 	in_word = 0;
+	quote = 0;
 	while (cmd[i])
 	{
-		if ((cmd[i] == '\'' || cmd[i] == '\"') && (!quote || quote == cmd[i]))
-		{
-			if (quote == 0)
-				quote = cmd[i];
-			else
-				quote = 0;
-		}
-		if (!is_whitespace(cmd[i]) && quote != 0)
+		if ((cmd[i] == '\'' || cmd[i] == '\"') && quote == 0)
+			quote = cmd[i];
+		else if (cmd[i] == quote)
+			quote = 0;
+		if (!is_whitespace(cmd[i]) || quote != 0)
 		{
 			if (in_word == 0)
+			{
 				count++;
-			in_word = 1;
+				in_word = 1;
+			}
 		}
 		else
 			in_word = 0;
@@ -50,57 +51,47 @@ static int	count_words(char *cmd)
 	return (count);
 }
 
-static char	*extract_str(char *cmd, int *i, char quote)
+static char	*extract_str(char *cmd, int *i)
 {
 	int		start;
 	int		len;
+	char	quote;
 
 	start = *i;
 	len = 0;
-	if (quote)
+	quote = 0;
+	if (cmd[*i] == '\'' || cmd[*i] == '\"')
 	{
-		start++;
+		quote = cmd[*i];
 		(*i)++;
 	}
-	while (cmd[*i])
+	while (cmd[*i] && (quote != 0 || !is_whitespace(cmd[*i])))
 	{
-		if (quote)
-		{
-			if (cmd[*i] == quote)
-				break;
-		}
-		else if (is_whitespace(cmd[*i]))
-			break;
+		if (quote != 0 && cmd[*i] == quote)
+			break ;
 		(*i)++;
 		len++;
 	}
-	if (quote && cmd[*i])
+	if (quote != 0 && cmd[*i] == quote)
 		(*i)++;
 	return (ft_substr(cmd, start, len));
 }
 
-static char	*get_str(char *cmd, int *i)
-{
-	char	quote;
-
-	while (is_whitespace(cmd[*i]))
-		(*i)++;
-	quote = 0;
-	if (cmd[*i] == '\'' || cmd[*i] == '\"')
-		quote = cmd[*i];
-	return (extract_str(cmd, i, quote));
-}
-
 char	**split_cmd(char *cmd)
 {
-	char	**substr;
+	char	**result;
 	int		i;
-	int		word_count;
 	int		word_index;
+	int		word_count;
 
+	if (!cmd || cmd[0] == '\0')
+	{
+		ft_putstr_fd("pipex: command not found\n", 2);
+		exit(127);
+	}
 	word_count = count_words(cmd);
-	substr = malloc(sizeof(char *) * (word_count + 1));
-	if (!substr)
+	result = malloc(sizeof(char *) * (word_count + 1));
+	if (!result)
 		return (NULL);
 	i = 0;
 	word_index = 0;
@@ -109,11 +100,8 @@ char	**split_cmd(char *cmd)
 		while (is_whitespace(cmd[i]))
 			i++;
 		if (cmd[i] != '\0')
-		{
-			substr[word_index] = get_str(cmd, &i);
-			word_index++;
-		}
+			result[word_index++] = extract_str(cmd, &i);
 	}
-	substr[word_index] = NULL;
-	return (substr);
+	result[word_index] = NULL;
+	return (result);
 }
