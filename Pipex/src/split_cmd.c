@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/03 22:14:08 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 10:34:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char	**split_cmd(char *cmd)
 		if (cmd[i] != '\0')
 		{
 			substr[word_index] = get_str(cmd, &i);
-			word_count++;
+			word_index++;
 		}
 	}
 	substr[word_index] = NULL;

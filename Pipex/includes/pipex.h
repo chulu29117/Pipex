@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 10:25:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 10:31:43 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef struct	s_pipex
 }	t_pipex;
 
 void	init_pipex(t_pipex *pipex, char **argv, char **envp);
+void	process(t_pipex *pipex);
+
 void	exec_pipex(t_pipex *pipex);
 
 void	first_child(t_pipex *pipex);
