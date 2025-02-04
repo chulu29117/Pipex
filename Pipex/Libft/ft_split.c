@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/04 20:51:38 by clu               #+#    #+#             */
-/*   Updated: 2024/12/22 15:55:58 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 20:01:36 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,20 @@ char	**ft_split(char const *s, char c)
 static size_t	count_words(char const *s, char c)
 {
 	size_t	words;
-	size_t	i;
+	int		in_word;
 
 	words = 0;
-	i = 0;
-	while (s[i])
+	in_word = 0;
+	while (*s)
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if (*s != c && !in_word)
+		{
+			in_word = 1;
 			words++;
-		i++;
+		}
+		else if (*s == c)
+			in_word = 0;
+		s++;
 	}
 	return (words);
 }
@@ -55,17 +60,20 @@ static char	*get_next_word(char const *s, char c, size_t *i)
 {
 	size_t	start;
 	size_t	end;
+	char	*word;
 
+	while (s[*i] && s[*i] == c)
+		(*i)++;
 	start = *i;
-	while (s[start] && s[start] == c)
-		start++;
-	if (!s[start])
+	while (s[*i] && s[*i] != c)
+		(*i)++;
+	end = *i;
+	if (start == end)
 		return (NULL);
-	end = start;
-	while (s[end] && s[end] != c)
-		end++;
-	*i = end;
-	return (ft_substr(s, start, end - start));
+	word = ft_substr(s, start, end - start);
+	if (!word)
+		return (NULL);
+	return (word);
 }
 
 void	ft_free_split(char **split)
@@ -92,10 +100,10 @@ static int	write_split(char **split, char const *s, char c)
 	j = 0;
 	while (s[i])
 	{
-		if (s[i] != c && (i == 0 || s[i - 1] == c))
+		if (s[i] != c)
 		{
 			split[j] = get_next_word(s, c, &i);
-			if (split[j] == NULL)
+			if (!split[j])
 			{
 				ft_free_split(split);
 				return (0);

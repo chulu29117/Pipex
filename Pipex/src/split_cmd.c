@@ -6,75 +6,40 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 10:57:47 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 23:08:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	is_whitespace(char c)
+static void	free_result(char **result, int count)
 {
-	if (c == ' ' || c == '\t' || c == '\n')
-		return (1);
-	return (0);
-}
-
-static int	count_words(char *cmd)
-{
-	int		i;
-	int		count;
-	int		in_word;
-	char	quote;
+	int	i;
 
 	i = 0;
-	count = 0;
-	in_word = 0;
-	quote = 0;
-	while (cmd[i])
+	while (i < count)
 	{
-		if ((cmd[i] == '\'' || cmd[i] == '\"') && quote == 0)
-			quote = cmd[i];
-		else if (cmd[i] == quote)
-			quote = 0;
-		if (!is_whitespace(cmd[i]) || quote != 0)
-		{
-			if (in_word == 0)
-			{
-				count++;
-				in_word = 1;
-			}
-		}
-		else
-			in_word = 0;
+		free(result[i]);
 		i++;
 	}
-	return (count);
+	free(result);
 }
 
-static char	*extract_str(char *cmd, int *i)
+static char	**check_cmd(char *cmd, int *i, int *word_count)
 {
-	int		start;
-	int		len;
-	char	quote;
+	char	**result;
 
-	start = *i;
-	len = 0;
-	quote = 0;
-	if (cmd[*i] == '\'' || cmd[*i] == '\"')
+	if (!cmd || cmd[0] == '\0')
 	{
-		quote = cmd[*i];
-		(*i)++;
+		ft_putstr_fd("pipex: command not found\n", 2);
+		exit(127);
 	}
-	while (cmd[*i] && (quote != 0 || !is_whitespace(cmd[*i])))
-	{
-		if (quote != 0 && cmd[*i] == quote)
-			break ;
-		(*i)++;
-		len++;
-	}
-	if (quote != 0 && cmd[*i] == quote)
-		(*i)++;
-	return (ft_substr(cmd, start, len));
+	*word_count = count_words(cmd);
+	result = malloc(sizeof(char *) * (*word_count + 1));
+	if (!result)
+		pipex_error("pipex: memory allocation failed");
+	*i = 0;
+	return (result);
 }
 
 char	**split_cmd(char *cmd)
@@ -84,15 +49,7 @@ char	**split_cmd(char *cmd)
 	int		word_index;
 	int		word_count;
 
-	if (!cmd || cmd[0] == '\0')
-	{
-		ft_putstr_fd("pipex: command not found\n", 2);
-		exit(127);
-	}
-	word_count = count_words(cmd);
-	result = malloc(sizeof(char *) * (word_count + 1));
-	if (!result)
-		return (NULL);
+	result = check_cmd(cmd, &i, &word_count);
 	i = 0;
 	word_index = 0;
 	while (cmd[i])
@@ -100,7 +57,15 @@ char	**split_cmd(char *cmd)
 		while (is_whitespace(cmd[i]))
 			i++;
 		if (cmd[i] != '\0')
-			result[word_index++] = extract_str(cmd, &i);
+		{
+			result[word_index] = extract_str(cmd, &i);
+			if (!result[word_index])
+			{
+				free_result(result, word_index);
+				pipex_error("pipex: memory allocation failed");
+			}
+			word_index++;
+		}
 	}
 	result[word_index] = NULL;
 	return (result);

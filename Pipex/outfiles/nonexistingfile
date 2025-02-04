@@ -1,4 +1,0 @@
-DEBUG: Running second command: grep nonexistingword
-DEBUG: Inside exec_cmd() with cmd: grep nonexistingword
-DEBUG: Found command path: /usr/bin/grep
-DEBUG: Executing /usr/bin/grep

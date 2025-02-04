@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/02/04 09:46:51 by clu              ###   ########.fr        #
+#    Updated: 2025/02/04 22:51:05 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 # Source files
 SRC = 	pipex.c \
+		substr_for_split.c \
 		split_cmd.c \
 		get_path.c \
 		exec_cmd.c \

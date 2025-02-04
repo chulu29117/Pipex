@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 11:26:25 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/04 16:03:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,41 +14,73 @@
 
 void	first_child(t_pipex *pipex)
 {
-	dup2(pipex->infile, STDIN_FILENO);
-	dup2(pipex->pipe_fds[1], STDOUT_FILENO);
 	close(pipex->pipe_fds[0]);
+	if (dup2(pipex->infile, STDIN_FILENO) == -1)
+	{
+		perror("pipex: first_child dup2 infile failed");
+		exit(1);
+	}
+	if (dup2(pipex->pipe_fds[1], STDOUT_FILENO) == -1)
+	{
+		perror("pipex: first_child dup2 pipe_fds[1] failed");
+		exit(1);
+	}
 	close(pipex->infile);
+	close(pipex->pipe_fds[1]);
 	exec_cmd(pipex->cmd1, pipex->envp);
+	perror("pipex: first_child exec_cmd failed");
+	exit(1);
 }
 
 void	second_child(t_pipex *pipex)
 {
+	close(pipex->pipe_fds[1]);
 	if (dup2(pipex->pipe_fds[0], STDIN_FILENO) == -1)
 	{
-		perror("DEBUG: dup2 input failed");
+		perror("pipex: second_child dup2 pipe_fds[0] failed");
 		exit(1);
 	}
 	if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
 	{
-		perror("DEBUG: dup2 output failed");
+		perror("pipex: second_child dup2 outfile failed");
 		exit(1);
 	}
-	close(pipex->pipe_fds[1]);
+	close(pipex->pipe_fds[0]);
 	close(pipex->outfile);
 	exec_cmd(pipex->cmd2, pipex->envp);
+	perror("pipex: second_child exec_cmd failed");
 	exit(1);
 }
 
-void	exec_pipex(t_pipex *pipex)
+static void	fork_child_1(t_pipex *pipex)
 {
 	pipex->pid1 = fork();
+	if (pipex->pid1 == -1)
+		pipex_error("pipex: fork failed");
 	if (pipex->pid1 == 0)
 		first_child(pipex);
+}
+
+int	exec_pipex(t_pipex *pipex)
+{
+	int	status1;
+	int	status2;
+
+	fork_child_1(pipex);
+	close(pipex->infile);
 	pipex->pid2 = fork();
+	if (pipex->pid2 == -1)
+		pipex_error("pipex: fork failed");
 	if (pipex->pid2 == 0)
 		second_child(pipex);
 	close(pipex->pipe_fds[0]);
 	close(pipex->pipe_fds[1]);
-	waitpid(pipex->pid1, NULL, 0);
-	waitpid(pipex->pid2, NULL, 0);
+	waitpid(pipex->pid2, &status2, 0);
+	waitpid(pipex->pid1, &status1, 0);
+	close(pipex->outfile);
+	if (WIFEXITED(status2))
+		return (WEXITSTATUS(status2));
+	if (WIFEXITED(status1))
+		return (WEXITSTATUS(status1));
+	return (1);
 }
