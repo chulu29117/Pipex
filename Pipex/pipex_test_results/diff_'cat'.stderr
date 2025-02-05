@@ -1,5 +1,5 @@
---- pipex_test_results/bash_'cat'.stderr	2025-02-05 11:47:58.556544422 +0200
-+++ pipex_test_results/pipex_'cat'.stderr	2025-02-05 11:47:58.558544513 +0200
+--- pipex_test_results/bash_'cat'.stderr	2025-02-05 12:12:26.991960305 +0200
++++ pipex_test_results/pipex_'cat'.stderr	2025-02-05 12:12:26.993960396 +0200
 @@ -1 +1,4 @@
 -test_pipex.sh: line 30: grep | Hello: command not found
 +pipex: Hello': command not found

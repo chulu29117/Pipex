@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:29:28 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 13:38:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/05 11:50:40 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main(int argc, char **argv, char **envp)
 	int		exit_code;
 
 	if (argc != 5)
-		pipex_error("Usage: ./pipex file1 cmd1 cmd2 file2");
+		pipex_error("Usage: ./pipex file1 cmd1 cmd2 file2", 1);
 	init_pipex(&pipex, argv, envp);
 	exit_code = exec_pipex(&pipex);
 	return (exit_code);

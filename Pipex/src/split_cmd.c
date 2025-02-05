@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 23:08:11 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/05 11:53:54 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,11 @@ static char	**check_cmd(char *cmd, int *i, int *word_count)
 	char	**result;
 
 	if (!cmd || cmd[0] == '\0')
-	{
-		ft_putstr_fd("pipex: command not found\n", 2);
-		exit(127);
-	}
+		pipex_error("pipex: command not found\n", 127);
 	*word_count = count_words(cmd);
 	result = malloc(sizeof(char *) * (*word_count + 1));
 	if (!result)
-		pipex_error("pipex: memory allocation failed");
+		pipex_error("pipex: memory allocation failed", 1);
 	*i = 0;
 	return (result);
 }
@@ -62,7 +59,7 @@ char	**split_cmd(char *cmd)
 			if (!result[word_index])
 			{
 				free_result(result, word_index);
-				pipex_error("pipex: memory allocation failed");
+				pipex_error("pipex: memory allocation failed", 1);
 			}
 			word_index++;
 		}

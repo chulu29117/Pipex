@@ -1,5 +1,5 @@
---- pipex_test_results/bash_3'.stderr	2025-02-05 11:47:58.603546564 +0200
-+++ pipex_test_results/pipex_3'.stderr	2025-02-05 11:47:58.604546610 +0200
+--- pipex_test_results/bash_3'.stderr	2025-02-05 12:12:27.041962572 +0200
++++ pipex_test_results/pipex_3'.stderr	2025-02-05 12:12:27.043962662 +0200
 @@ -1 +1,2 @@
 -test_pipex.sh: line 30: head | -n > pipex_test_results/bash_3: No such file or directory
 +pipex: -n: command not found

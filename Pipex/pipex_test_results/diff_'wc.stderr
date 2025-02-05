@@ -1,5 +1,5 @@
---- pipex_test_results/bash_'wc.stderr	2025-02-05 11:47:58.626547613 +0200
-+++ pipex_test_results/pipex_'wc.stderr	2025-02-05 11:47:58.627547658 +0200
+--- pipex_test_results/bash_'wc.stderr	2025-02-05 12:12:27.063963569 +0200
++++ pipex_test_results/pipex_'wc.stderr	2025-02-05 12:12:27.064963615 +0200
 @@ -1 +1,2 @@
 -test_pipex.sh: eval: line 30: unexpected EOF while looking for matching `''
 +pipex: -l': command not found
