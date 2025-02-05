@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/04 23:05:12 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/05 10:41:37 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	second_child(t_pipex *pipex);
 void	exec_cmd(char *cmd, char **envp);
 
 void	pipex_error(const char *msg);
+void	cmd_error(const char *cmd);
+
 int		is_whitespace(char c);
 int		count_words(char *cmd);
 char	*extract_str(char *cmd, int *i);

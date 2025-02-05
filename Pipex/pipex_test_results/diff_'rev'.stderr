@@ -1,0 +1,6 @@
+--- pipex_test_results/bash_'rev'.stderr	2025-02-05 11:47:58.592546063 +0200
++++ pipex_test_results/pipex_'rev'.stderr	2025-02-05 11:47:58.593546108 +0200
+@@ -1 +1,2 @@
+-test_pipex.sh: line 30: echo | Test: command not found
++pipex: Test': command not found
++

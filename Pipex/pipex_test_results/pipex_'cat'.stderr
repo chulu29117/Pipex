@@ -1,0 +1,4 @@
+pipex: Hello': command not found
+
+Usage: grep [OPTION]... PATTERNS [FILE]...
+Try 'grep --help' for more information.
