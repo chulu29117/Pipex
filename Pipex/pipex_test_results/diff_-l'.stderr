@@ -1,4 +1,0 @@
---- pipex_test_results/bash_-l'.stderr	2025-02-05 12:12:27.016961438 +0200
-+++ pipex_test_results/pipex_-l'.stderr	2025-02-05 12:12:27.017961484 +0200
-@@ -1 +0,0 @@
--test_pipex.sh: line 30: /usr/bin/wc > pipex_test_results/bash_-l: No such file or directory
