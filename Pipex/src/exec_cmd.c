@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 12:06:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/05 16:45:15 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 	{
 		ft_free_array(*args);
 		cmd_error(cmd);
-		return (127);
+		exit (127);
 	}
 	*path = find_path((*args)[0], envp);
 	if (!*path)
 	{
 		ft_free_array(*args);
 		cmd_error(cmd);
-		return (127);
+		exit (127);
 	}
 	return (0);
 }

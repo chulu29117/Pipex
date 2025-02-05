@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 11:56:09 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/05 16:44:15 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,16 @@ void	second_child(t_pipex *pipex)
 	pipex_error("pipex: second_child exec_cmd failed", 1);
 }
 
-static void	fork_child_1(t_pipex *pipex)
-{
-	pipex->pid1 = fork();
-	if (pipex->pid1 == -1)
-		pipex_error("pipex: fork failed", 1);
-	if (pipex->pid1 == 0)
-		first_child(pipex);
-}
-
 int	exec_pipex(t_pipex *pipex)
 {
 	int	status1;
 	int	status2;
 
-	fork_child_1(pipex);
+	pipex->pid1 = fork();
+	if (pipex->pid1 == -1)
+		pipex_error("pipex: fork failed", 1);
+	if (pipex->pid1 == 0)
+		first_child(pipex);	
 	close(pipex->infile);
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
