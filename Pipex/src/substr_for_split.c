@@ -6,12 +6,13 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 11:56:34 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/07 16:53:01 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+// Check if the character is a whitespace character
 int	is_whitespace(char c)
 {
 	if (c == ' ' || c == '\t' || c == '\n')
@@ -19,6 +20,7 @@ int	is_whitespace(char c)
 	return (0);
 }
 
+// Check if the character is a quote character
 static void	check_quote(char *quote, char c)
 {
 	if (*quote == 0 && (c == '\'' || c == '\"'))
@@ -27,33 +29,34 @@ static void	check_quote(char *quote, char c)
 		*quote = 0;
 }
 
-int	count_words(char *cmd)
+// Count the number of commands in the command string
+int	count_cmds(char *cmd)
 {
 	int		i;
-	int		count;
-	int		in_word;
+	int		cmd_count;
+	int		in_string;
 	char	quote;
 
 	i = 0;
-	count = 0;
-	in_word = 0;
+	cmd_count = 0;
+	in_string = 0;
 	quote = 0;
 	while (cmd[i])
 	{
 		check_quote(&quote, cmd[i]);
 		if (!is_whitespace(cmd[i]) || quote != 0)
 		{
-			if (in_word == 0)
+			if (in_string == 0)
 			{
-				count++;
-				in_word = 1;
+				cmd_count++;
+				in_string = 1;
 			}
 		}
 		else
-			in_word = 0;
+			in_string = 0;
 		i++;
 	}
-	return (count);
+	return (cmd_count);
 }
 
 static void	skip_quotes(char *cmd, int *i, char *quote, int *start)

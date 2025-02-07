@@ -6,11 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/02/05 20:53:08 by clu              ###   ########.fr       */
-=======
-/*   Updated: 2025/02/07 14:51:35 by clu              ###   ########.fr       */
->>>>>>> 17be16d (files added)
+/*   Updated: 2025/02/07 16:33:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +31,12 @@ void	first_child(t_pipex *pipex)
 	pipex_error("pipex: first_child exec_cmd failed", 1);
 }
 
+// Second child process
+// Close the write end of the pipe
+// Redirect the standard input to the read end of the pipe
+// Redirect the standard output to the output file
+// Close the read end of the pipe and the output file descriptor
+// Execute the second command
 void	second_child(t_pipex *pipex)
 {
 	close(pipex->pipe_fds[1]);
@@ -48,6 +50,15 @@ void	second_child(t_pipex *pipex)
 	pipex_error("pipex: second_child exec_cmd failed", 1);
 }
 
+// Execute the pipex command
+// Fork the first child process
+// Close the input file descriptor
+// Fork the second child process
+// Close the read and write end of the pipe
+// Wait for the second child and first child processes to finish
+// Close the output file descriptor
+// Return the exit status of the second child process
+// If the second child process does not exit normally, return the exit status of the first child process
 int	exec_pipex(t_pipex *pipex)
 {
 	int	status1;
