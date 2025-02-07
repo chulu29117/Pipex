@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 21:42:32 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 16:49:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/07 15:13:57 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	pipex_error(const char *msg, int exit_code)
 {
+	if (errno == 0)
+		errno = exit_code;
 	perror(msg);
 	exit(exit_code);
 }

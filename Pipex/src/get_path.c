@@ -6,12 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 11:31:38 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/07 15:48:30 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+// Get the directories in the PATH environment variable
+// If the PATH environment variable is not set, use the default paths
+// Split the PATH environment variable by ':' and return the directories
 static char	**get_path_dirs(char **envp)
 {
 	int			i;
@@ -31,6 +34,10 @@ static char	**get_path_dirs(char **envp)
 	return (paths);
 }
 
+// Check if the command is in the directories in the PATH
+// Concatenate the directory and the command
+// Check if the command is executable, X_OK mode for executable
+// If the command is found, return the full path
 static char	*exec_in_path(char *cmd, char **paths)
 {
 	char	*full_path;
@@ -55,6 +62,10 @@ static char	*exec_in_path(char *cmd, char **paths)
 	return (NULL);
 }
 
+// Find the full path of the command
+// Check if the command is an absolute path or a relative path
+// Get the directories in the PATH environment variable
+// Search for the command in the directories in the PATH
 char	*find_path(char *cmd, char **envp)
 {
 	char		**paths;

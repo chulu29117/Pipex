@@ -6,12 +6,21 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:59 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 16:53:09 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/07 14:58:13 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+// Initialize the pipex structure
+// Open the input file
+// If the input file cannot be opened, open /dev/null
+// If /dev/null cannot be opened, exit with an error message
+// Open the output file
+// If the output file cannot be opened, exit with an error message
+// Set the command strings
+// Set the environment variables
+// Create a pipe
 void	init_pipex(t_pipex *pipex, char **argv, char **envp)
 {
 	pipex->infile = open(argv[1], O_RDONLY);

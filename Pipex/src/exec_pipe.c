@@ -6,19 +6,29 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/05 20:53:08 by clu              ###   ########.fr       */
+=======
+/*   Updated: 2025/02/07 14:51:35 by clu              ###   ########.fr       */
+>>>>>>> 17be16d (files added)
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+// First child process
+// Close the read end of the pipe
+// Redirect the standard input to the input file
+// Redirect the standard output to the write end of the pipe
+// Close the input file descriptor and the write end of the pipe
+// Execute the first command
 void	first_child(t_pipex *pipex)
 {
 	close(pipex->pipe_fds[0]);
 	if (dup2(pipex->infile, STDIN_FILENO) == -1)
 		pipex_error("pipex: first_child dup2 infile failed", 1);
 	if (dup2(pipex->pipe_fds[1], STDOUT_FILENO) == -1)
-		pipex_error("pipex: first_child dup2 pipe_fds[1] failed", 1);
+		pipex_error("pipex: first_child dup2 outfile failed", 1);
 	close(pipex->infile);
 	close(pipex->pipe_fds[1]);
 	exec_cmd(pipex->cmd1, pipex->envp);
@@ -47,7 +57,7 @@ int	exec_pipex(t_pipex *pipex)
 	if (pipex->pid1 == -1)
 		pipex_error("pipex: fork failed", 1);
 	if (pipex->pid1 == 0)
-		first_child(pipex);	
+		first_child(pipex);
 	close(pipex->infile);
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
