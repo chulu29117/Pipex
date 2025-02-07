@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/07 16:43:16 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/07 23:57:02 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,28 @@ typedef struct s_pipex
 	pid_t	pid2;
 }	t_pipex;
 
+// Initialize the pipex structure
 void	init_pipex(t_pipex *pipex, char **argv, char **envp);
 
-int		exec_pipex(t_pipex *pipex);
+// Find the full path of the command
+char	*find_path(char *cmd, char **envp);
 
-void	first_child(t_pipex *pipex);
-void	second_child(t_pipex *pipex);
+// Execute the pipex command
+int		exec_pipex(t_pipex *pipex);
 void	exec_cmd(char *cmd, char **envp);
 
+// Child processes
+void	first_child(t_pipex *pipex);
+void	second_child(t_pipex *pipex);
+
+// Error handling
 void	pipex_error(const char *msg, int exit_code);
 void	cmd_error(const char *cmd);
 
+// Split the command
 int		is_whitespace(char c);
 int		count_cmds(char *cmd);
 char	*extract_str(char *cmd, int *i);
 char	**split_cmd(char *cmd);
-char	*find_path(char *cmd, char **envp);
 
 #endif
