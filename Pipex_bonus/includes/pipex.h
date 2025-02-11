@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 22:06:19 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 22:00:51 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,5 +58,21 @@ int		is_whitespace(char c);
 int		count_cmds(char *cmd);
 char	*extract_str(char *cmd, int *i);
 char	**split_cmd(char *cmd);
+
+// Bonus part handling multiple commands
+typedef struct s_bonus
+{
+	int		infile;
+	int		outfile;
+	int		cmd_count;
+	char	**argv;
+	char	**envp;
+	int		**pipes;
+}	t_bonus;
+
+void	child_setup(t_bonus *bonus, int i);
+void	exec_bonus(int argc, char **argv, char **envp);
+int		**alloc_pipes(int count);
+int		here_doc(char *limiter);
 
 #endif
