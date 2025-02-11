@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/02/07 16:08:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 17:51:19 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 {
 	*args = split_cmd(cmd);
 	if (!*args)
-		pipex_error("pipex: memory allocation failed", 1);
+		ft_pipex_error("pipex: memory allocation failed", 1);
 	if (!(*args)[0])
 	{
 		ft_free_array(*args);
@@ -60,9 +60,9 @@ void	exec_cmd(char *cmd, char **envp)
 		free(path);
 		ft_free_array(args);
 		if (errno == ENOENT)
-			pipex_error(args[0], 127);
+			ft_pipex_error(args[0], 127);
 		else if (errno == EACCES)
-			pipex_error(args[0], 126);
+			ft_pipex_error(args[0], 126);
 		else
 			exit(1);
 	}

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 17:05:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 18:01:03 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	first_child(t_pipex *pipex)
 {
 	close(pipex->pipe_fds[0]);
 	if (dup2(pipex->infile, STDIN_FILENO) == -1)
-		pipex_error("pipex: first_child dup2 infile failed", 1);
+		ft_pipex_error("pipex: first_child dup2 infile failed", 1);
 	if (dup2(pipex->pipe_fds[1], STDOUT_FILENO) == -1)
-		pipex_error("pipex: first_child dup2 outfile failed", 1);
+		ft_pipex_error("pipex: first_child dup2 outfile failed", 1);
 	close(pipex->infile);
 	close(pipex->pipe_fds[1]);
 	exec_cmd(pipex->cmd1, pipex->envp);
-	pipex_error("pipex: first_child exec_cmd failed", 1);
+	ft_pipex_error("pipex: first_child exec_cmd failed", 1);
 }
 
 // Second child process
@@ -41,13 +41,13 @@ void	second_child(t_pipex *pipex)
 {
 	close(pipex->pipe_fds[1]);
 	if (dup2(pipex->pipe_fds[0], STDIN_FILENO) == -1)
-		pipex_error("pipex: second_child dup2 pipe_fds[0] failed", 1);
+		ft_pipex_error("pipex: second_child dup2 pipe_fds[0] failed", 1);
 	if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
-		pipex_error("pipex: second_child dup2 outfile failed", 1);
+		ft_pipex_error("pipex: second_child dup2 outfile failed", 1);
 	close(pipex->pipe_fds[0]);
 	close(pipex->outfile);
 	exec_cmd(pipex->cmd2, pipex->envp);
-	pipex_error("pipex: second_child exec_cmd failed", 1);
+	ft_pipex_error("pipex: second_child exec_cmd failed", 1);
 }
 
 // Execute the pipex command
@@ -66,13 +66,13 @@ int	exec_pipex(t_pipex *pipex)
 
 	pipex->pid1 = fork();
 	if (pipex->pid1 == -1)
-		pipex_error("pipex: fork failed", 1);
+		ft_pipex_error("pipex: fork failed", 1);
 	if (pipex->pid1 == 0)
 		first_child(pipex);
 	close(pipex->infile);
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
-		pipex_error("pipex: fork failed", 1);
+		ft_pipex_error("pipex: fork failed", 1);
 	if (pipex->pid2 == 0)
 		second_child(pipex);
 	close(pipex->pipe_fds[0]);

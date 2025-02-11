@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/02/07 16:53:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 18:01:41 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,6 @@ char	*extract_str(char *cmd, int *i)
 		(*i)++;
 	substr = ft_substr(cmd, start, len);
 	if (!substr)
-		pipex_error("pipex: ft_substr failed", 1);
+		ft_pipex_error("pipex: ft_substr failed", 1);
 	return (substr);
 }

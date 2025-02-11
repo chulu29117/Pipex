@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 00:02:04 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 17:15:18 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 18:30:41 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	if ((ft_strcmp(argv[1], "here_doc") == 0 && argc < 6)
-		|| (ft_strcmp(argv[1], "here_doc") != 0 && argc < 5))
+	if (argc < 5)
 	{
-		errno = EINVAL;
-		pipex_error("Usage: ./pipex here_doc LIMITER cmd1 ... file OR\n"
-			"./pipex file1 cmd1 cmd2 ... file2", 1);
+		write(2, "Usage: ./pipex [infile/here_doc] "
+				"[cmd1 ... cmdn] [outfile]\n", 54);
+		return (1);
 	}
+	exec_bonus(argc, argv, envp);
+	return (0);
 }
