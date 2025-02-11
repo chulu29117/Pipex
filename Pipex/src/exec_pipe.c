@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/07 16:33:11 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 17:05:30 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	second_child(t_pipex *pipex)
 // Wait for the second child and first child processes to finish
 // Close the output file descriptor
 // Return the exit status of the second child process
-// If the second child process does not exit normally, return the exit status of the first child process
+// If the second child process does not exit, exit first child process
 int	exec_pipex(t_pipex *pipex)
 {
 	int	status1;

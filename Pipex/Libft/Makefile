@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/28 15:08:55 by clu               #+#    #+#              #
-#    Updated: 2025/01/30 22:12:22 by clu              ###   ########.fr        #
+#    Updated: 2025/02/11 17:11:38 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ SOURCES =	ft_atoi.c				ft_atol.c				ft_atoll.c				\
 			ft_format_check.c		ft_putchar.c			ft_putstr.c				\
 			ft_putnbr.c				ft_putnbr_i.c			ft_puthex.c				\
 			ft_puthex_low.c			ft_puthex_up.c			ft_putptr.c				\
-			ft_free_array.c
+			ft_free_array.c			ft_strcmp.c
 						
 OBJECTS = $(SOURCES:.c=.o)
 

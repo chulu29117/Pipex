@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/07 23:57:02 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 17:25:22 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,16 @@ typedef struct s_pipex
 	pid_t	pid2;
 }	t_pipex;
 
+typedef struct s_bonus
+{
+	int		cmd_count;
+	char	**argv;
+	char	**envp;
+	int		infile_fd;
+	int		outfile_fd;
+	int		**pipes;
+}	t_bonus;
+
 // Initialize the pipex structure
 void	init_pipex(t_pipex *pipex, char **argv, char **envp);
 
@@ -58,5 +68,13 @@ int		is_whitespace(char c);
 int		count_cmds(char *cmd);
 char	*extract_str(char *cmd, int *i);
 char	**split_cmd(char *cmd);
+
+// Bonus part handling multiple commands
+int		here_doc(char *limiter);
+void	exec_bonus(int argc, char **argv, char **envp);
+
+int		**alloc_pipes(int cmd_count);
+void	close_pipes(int **pipes, int cmd_count);
+void	wait_children(int *pids, int cmd_count);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/09 11:54:27 by clu               #+#    #+#             */
-/*   Updated: 2025/02/05 16:25:51 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/11 17:04:32 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static long	overflow_check(const char *str, int sign)
 			if (sign == -1)
 				return (LONG_MIN);
 			return (LONG_MAX);
-		}	
+		}
 		res = res * 10 + (*str - '0');
 		str++;
 	}
