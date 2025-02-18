@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/02/11 22:16:53 by clu              ###   ########.fr        #
+#    Updated: 2025/02/18 21:40:22 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,42 +18,36 @@ CC 		= cc
 CFLAGS 	= -Wall -Werror -Wextra
 
 # Directories
-SRC_DIR 		= src
-OBJ_DIR 		= obj
-LIBFT_DIR 		= Libft
-HEADER_DIR 		= includes
+SRC_DIR 		= ./src
+OBJ_DIR 		= ./obj
+LIBFT_DIR 		= ./Libft
 
 # Libraries
 LIBFT = $(LIBFT_DIR)/libft.a
 
-# Source files
-SRC =	pipex.c \
-		substr_for_split.c \
-		split_cmd.c \
-		get_path.c \
-		exec_cmd.c \
-		exec_pipe.c \
-		init_process.c \
-		pipex_error.c
+# Header files
+HEADERS = -I./includes -I$(LIBFT_DIR)
 
-SRC := $(addprefix $(SRC_DIR)/, $(SRC))
+# Source files
+SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-all: $(NAME)
+all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(OBJ)
 	@echo "Compiling $(NAME) ..."
-	$(CC) $(CFLAGS) -I$(HEADER_DIR) -I$(LIBFT_DIR) $(OBJ) -L$(LIBFT_DIR) -lft -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(HEADERS) -o $(NAME)
 	@echo "Done"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
-	$(CC) $(CFLAGS) -I$(HEADER_DIR) -I$(LIBFT_DIR) -c $< -o $@
+	$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
 
 $(LIBFT):
 	@echo "Compiling Libft..."
 	@make -C $(LIBFT_DIR)
+	@echo "Done"
 
 clean:
 	@make -C $(LIBFT_DIR) clean
@@ -61,8 +55,8 @@ clean:
 	@echo "Cleaned up all object files"
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean
 	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
 	@echo "Cleaned up $(NAME)"
 	@echo "Cleaned up everything"
 

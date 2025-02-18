@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 22:06:19 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/18 21:34:02 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_pipex
 	int		pipe_fds[2];
 	int		infile;
 	int		outfile;
+	char	*outfile_path;
 	char	*cmd1;
 	char	*cmd2;
 	char	**cmd_paths;

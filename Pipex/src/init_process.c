@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:59 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 18:01:20 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/18 21:21:34 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,7 @@ void	init_pipex(t_pipex *pipex, char **argv, char **envp)
 		if (pipex->infile < 0)
 			ft_pipex_error("pipex: failed to open /dev/null", 1);
 	}
-	pipex->outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (pipex->outfile < 0)
-		ft_pipex_error("pipex: output", 1);
+	pipex->outfile_path = argv[4];
 	pipex->cmd1 = argv[2];
 	pipex->cmd2 = argv[3];
 	pipex->envp = envp;
