@@ -6,14 +6,14 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 18:01:31 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/23 23:42:19 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 // Free the cmds array
-static void	free_result(char **cmds, int count)
+static void	free_cmds(char **cmds, int count)
 {
 	int	i;
 
@@ -27,6 +27,8 @@ static void	free_result(char **cmds, int count)
 }
 
 // Check and allocate memory for the command
+	// Count the number of commands in the command string
+	// Allocate memory for the command array
 static char	**check_cmd(char *cmd, int *i, int *cmd_count)
 {
 	char	**result;
@@ -42,6 +44,8 @@ static char	**check_cmd(char *cmd, int *i, int *cmd_count)
 }
 
 // Extract the string from the command
+	// Validate and allocate memory for the command array
+	// Extract the string from the command
 char	**split_cmd(char *cmd)
 {
 	char	**cmds;
@@ -61,7 +65,7 @@ char	**split_cmd(char *cmd)
 			cmds[cmd_index] = extract_str(cmd, &i);
 			if (!cmds[cmd_index])
 			{
-				free_result(cmds, cmd_index);
+				free_cmds(cmds, cmd_index);
 				ft_pipex_error("pipex: memory allocation failed", 1);
 			}
 			cmd_index++;
