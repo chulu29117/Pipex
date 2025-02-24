@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/02/23 22:56:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/24 14:01:12 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,17 @@ static char	**get_path_dirs(char **envp)
 {
 	int			i;
 	char		**paths;
-	static char	*default_paths[] = {"/bin", "/usr/bin", NULL};
 
 	if (!envp || !*envp)
-		return (default_paths);
+		return (NULL);
 	i = 0;
 	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
 	if (!envp[i])
-		return (default_paths);
+		return (NULL);
 	paths = ft_split(envp[i] + 5, ':');
 	if (!paths)
-		return (default_paths);
+		return (NULL);
 	return (paths);
 }
 
@@ -82,7 +81,10 @@ char	*find_path(char *cmd, char **envp)
 	if (!paths)
 		return (NULL);
 	full_path = exec_in_path(cmd, paths);
-	if (paths != get_path_dirs(NULL))
+	if (!full_path)
+	{
 		ft_free_array(paths);
+		return (NULL);
+	}
 	return (full_path);
 }

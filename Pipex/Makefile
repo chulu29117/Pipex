@@ -6,7 +6,7 @@
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/02/18 21:40:22 by clu              ###   ########.fr        #
+#    Updated: 2025/02/24 11:01:59 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ LIBFT_DIR 		= ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 # Header files
-HEADERS = -I./includes -I$(LIBFT_DIR)
+HEADERS = -I./include -I$(LIBFT_DIR)
 
 # Source files
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
