@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/02/11 18:01:41 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/24 10:58:13 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,21 @@ int	count_cmds(char *cmd)
 	return (cmd_count);
 }
 
+// Skip quotes in the command string
 static void	skip_quotes(char *cmd, int *i, char *quote, int *start)
 {
 	*quote = 0;
+	// If the character is a quote character
 	if (cmd[*i] == '\'' || cmd[*i] == '\"')
 	{
+		// Set the quote character
 		*quote = cmd[*i];
 		(*start)++;
 		(*i)++;
 	}
 }
 
+// Extract the string from the command
 char	*extract_str(char *cmd, int *i)
 {
 	int		start;
@@ -79,7 +83,9 @@ char	*extract_str(char *cmd, int *i)
 
 	start = *i;
 	len = 0;
+	// Skip quotes in the command string
 	skip_quotes(cmd, i, &quote, &start);
+	// While the character is not a whitespace character or a quote character
 	while (cmd[*i] && (quote != 0 || !is_whitespace(cmd[*i])))
 	{
 		if (quote != 0 && cmd[*i] == quote)
