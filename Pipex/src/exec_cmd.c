@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 11:11:06 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 23:14:29 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,23 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 	if (!*path)
 	{
 		ft_free_array(*args);
-		cmd_error(cmd);
+		ft_putstr_fd("pipex: ", STDERR_FILENO);
+		ft_putstr_fd(cmd, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		exit (127);
 	}
 	return (0);
+}
+
+static void	free_cmd(int exit_code, char *cmd_name)
+{
+	ft_putstr_fd("pipex: ", STDERR_FILENO);
+	ft_putstr_fd(cmd_name, STDERR_FILENO);
+	ft_putstr_fd(": ", STDERR_FILENO);
+	ft_putstr_fd(strerror(errno), STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	free(cmd_name);
+	exit(exit_code);
 }
 
 // Execute the command
@@ -47,6 +60,7 @@ void	exec_cmd(char *cmd, char **envp)
 	char	**args;
 	char	*path;
 	int		exit_code;
+	char	*cmd_name;
 
 	exit_code = prepare_cmd(cmd, &args, &path, envp);
 	if (exit_code != 0)
@@ -58,13 +72,14 @@ void	exec_cmd(char *cmd, char **envp)
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putstr_fd(strerror(errno), STDERR_FILENO);
 		ft_putstr_fd("\n", STDERR_FILENO);
+		cmd_name = ft_strdup(args[0]);
 		free(path);
 		ft_free_array(args);
 		if (errno == ENOENT)
-			ft_pipex_error(args[0], 127);
+			free_cmd(127, cmd_name);
 		else if (errno == EACCES)
-			ft_pipex_error(args[0], 126);
+			free_cmd(126, cmd_name);
 		else
-			exit(1);
+			free_cmd(1, cmd_name);
 	}
 }

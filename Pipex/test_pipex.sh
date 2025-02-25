@@ -4,12 +4,29 @@
 # This script runs a series of tests for ./pipex and compares the output and exit code
 # with the expected behavior from Bash. For each test, it prints the test number, description,
 # the output (STDOUT+STDERR) and the exit code for both pipex and Bash.
+# The OK/KO message (colored) is determined by comparing only the exit codes.
+# At the end, a summary is printed with the count of OK tests and details of any failed ones.
+
+# Global counters and arrays.
+total_tests=0
+ok_tests=0
+failed_tests=()
+
+# Function to print a fancy header.
+print_header() {
+    local title="$1"
+    echo -e "\e[1;34m+=====================================+"
+    printf "| %-35s |\n" "$title"
+    echo -e "+=====================================+\e[0m"
+}
 
 # Helper function to run a non-here_doc test.
 run_test() {
     test_num=$1
     test_desc="$2"
     shift 2
+
+    ((total_tests++))
 
     # Build the pipex command (arguments remain as passed).
     pipex_cmd=(./pipex "$@")
@@ -23,44 +40,53 @@ run_test() {
     # Remove any previous output files.
     rm -f "$outfile" no_file.txt
 
-    echo "-------------------------------------"
-    echo "Test $test_num: $test_desc"
-    echo "Pipex command: ${pipex_cmd[*]}"
+    print_header "Test $test_num: $test_desc"
+    echo -e "\e[1;33mPipex command:\e[0m ${pipex_cmd[*]}"
     
     # Run pipex and capture its output (STDOUT+STDERR) and exit code.
     pipex_output=$( { "${pipex_cmd[@]}"; } 2>&1 )
     pipex_exit=$?
     
-    # Now simulate the equivalent bash pipeline.
-    # For a normal pipeline, we simulate:
+    # Now simulate the equivalent bash pipeline:
     #   < infile cmd1 | cmd2 > outfile
     bash_cmd="cat < \"$infile\" | $cmd1 | $cmd2 > \"$outfile\""
-    # Run the bash command.
     bash_output=$( { eval "$bash_cmd"; } 2>&1 )
     bash_exit=$?
     
-    echo "Pipex output/error:"
+    echo -e "\e[1;36mPipex output/error:\e[0m"
     echo "$pipex_output"
-    echo "Pipex exit code: $pipex_exit"
-    echo "Bash simulation output/error:"
+    echo -e "\e[1;36mPipex exit code:\e[0m $pipex_exit"
+    echo ""
+    echo -e "\e[1;36mBash simulation output/error:\e[0m"
     echo "$bash_output"
-    echo "Bash simulation exit code: $bash_exit"
-    echo "-------------------------------------"
+    echo -e "\e[1;36mBash simulation exit code:\e[0m $bash_exit"
+    
+    # Compare exit codes only.
+    if [ "$pipex_exit" -eq "$bash_exit" ]; then
+        echo -e "\e[1;32m[ OK ] Exit codes match\e[0m"
+        ((ok_tests++))
+    else
+        echo -e "\e[1;31m[ KO ] Exit codes differ\e[0m"
+        failed_tests+=("$test_num")
+    fi
+
+    echo -e "\e[1;34m+-------------------------------------+\e[0m"
     echo ""
 }
 
-# For tests that require a modified PATH, we'll run them via env.
+# For tests that require a modified PATH, run them via env.
 run_test_env() {
     test_num=$1
     test_desc="$2"
-    env_setting="$3"  # e.g. PATH=""
+    env_setting="$3"  # e.g., PATH=""
     shift 3
 
-    echo "Setting environment: $env_setting"
+    echo -e "\e[1;35mSetting environment: $env_setting\e[0m"
     env $env_setting run_test "$test_num" "$test_desc" "$@"
 }
 
 # ----------------- Mandatory Tests -----------------
+print_header "Mandatory Tests"
 
 # Test 1: Normal parameters, simple commands.
 run_test 1 "Normal parameters, simple commands, everything should go ok" infile.txt cat wc outfile.txt
@@ -152,13 +178,17 @@ run_test_env 28 "Search by directory order in PATH (tests_dir last)" "PATH=/usr/
 run_test_env 29 "PATH is shorter and does not have /usr/bin (thus wc missing)" "PATH=/bin" infile.txt cat wc outfile.txt
 
 # Test 30: PATH has '/' at the end of each entry.
-# Here we add a trailing slash to each PATH entry.
 run_test_env 30 "PATH has '/' at the end of each entry" "PATH=/usr/local/bin/:/usr/bin/:/bin/:/usr/sbin/:/sbin/" infile.txt cat wc outfile.txt
 
 # Test 31: Execute command in a subdirectory.
 run_test 31 "Execute command in a subdirectory" infile.txt subdir/script.sh wc outfile.txt
 
-# ----------------- Bonus Tests -----------------
-# (Add bonus tests similarly if needed)
-
-echo "All tests completed."
+# Summary of test results.
+echo -e "\e[1;35m+=====================================+"
+echo -e "  Test Summary: $ok_tests out of $total_tests tests passed."
+if [ "$ok_tests" -eq "$total_tests" ]; then
+    echo -e "  Congratulations! All tests passed."
+else
+    echo -e "  Failed tests: ${failed_tests[*]}"
+fi
+echo -e "+=====================================+\e[0m"

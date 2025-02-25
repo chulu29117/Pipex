@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 17:48:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 21:51:04 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include "libft.h"
 
+// Structure for pipex
 typedef struct s_pipex
 {
 	int		pipe_fds[2];
