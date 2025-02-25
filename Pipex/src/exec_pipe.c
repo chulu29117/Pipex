@@ -6,11 +6,12 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/20 15:47:35 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 14:10:44 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+#include <signal.h>
 
 // Initialize the pipex structure
 	// Atempt to open the input file from argv[1] for reading
@@ -75,7 +76,7 @@ static void	second_child(t_pipex *pipex)
 		ft_pipex_error("pipex: second_child dup2 outfile failed", 1);
 	close(pipex->pipe_fds[0]);
 	close(pipex->outfile);
-	exec_cmd(pipex->cmd2, pipex->envp);
+ 	exec_cmd(pipex->cmd2, pipex->envp);
 }
 
 // Execute the pipex command
@@ -109,7 +110,5 @@ int	exec_pipex(t_pipex *pipex)
 	waitpid(pipex->pid2, &status2, 0);
 	if (WIFEXITED(status2))
 		return (WEXITSTATUS(status2));
-	if (WIFEXITED(status1))
-		return (WEXITSTATUS(status1));
-	return (1);
+	return (0);
 }

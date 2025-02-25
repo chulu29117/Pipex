@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/23 23:42:19 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 11:14:22 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ static char	**check_cmd(char *cmd, int *i, int *cmd_count)
 	char	**result;
 
 	if (!cmd || cmd[0] == '\0')
-		ft_pipex_error("pipex: command not found\n", 127);
+	{
+		cmd_error(cmd);
+		exit(127);
+	}
 	*cmd_count = count_cmds(cmd);
 	result = malloc(sizeof(char *) * (*cmd_count + 1));
 	if (!result)
