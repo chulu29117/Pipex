@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 21:51:04 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 23:23:25 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,13 @@ typedef struct s_pipex
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipex;
+
+typedef struct s_buffer
+{
+	char	*result;
+	int		pos;
+	int		capacity;
+}	t_buffer;
 
 // Initialize the pipex structure
 void	init_pipex(t_pipex *pipex, char **argv, char **envp);
