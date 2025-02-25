@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 11:14:22 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 17:01:20 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	**split_cmd(char *cmd)
 	cmd_index = 0;
 	while (cmd[i])
 	{
-		while (is_whitespace(cmd[i]))
+		while (ft_is_whitespace(cmd[i]))
 			i++;
 		if (cmd[i] != '\0')
 		{

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 14:10:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 16:57:10 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 	// Create array of two file descriptors for the pipe: Read and Write ends
 void	init_pipex(t_pipex *pipex, char **argv, char **envp)
 {
+	int	empty_pipe[2];
+
 	pipex->infile = open(argv[1], O_RDONLY);
 	if (pipex->infile < 0)
 	{
@@ -27,9 +29,12 @@ void	init_pipex(t_pipex *pipex, char **argv, char **envp)
 		ft_putstr_fd(argv[1], STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		perror("");
-		pipex->infile = open("/dev/null", O_RDONLY);
-		if (pipex->infile < 0)
-			ft_pipex_error("pipex: failed to open /dev/null", 1);
+		{
+			if (pipe(empty_pipe) == -1)
+				ft_pipex_error("pipex: pipe create empty pipe", 1);
+			close(empty_pipe[1]);
+			pipex->infile = empty_pipe[0];
+		}
 	}
 	pipex->outfile_path = argv[4];
 	pipex->cmd1 = argv[2];
@@ -51,7 +56,7 @@ static void	first_child(t_pipex *pipex)
 	if (dup2(pipex->infile, STDIN_FILENO) == -1)
 		ft_pipex_error("pipex: first_child dup2 infile failed", 1);
 	if (dup2(pipex->pipe_fds[1], STDOUT_FILENO) == -1)
-		ft_pipex_error("pipex: first_child dup2 outfile failed", 1);
+		ft_pipex_error("pipex: first_child dup2 pipe_fds[1] failed", 1);
 	close(pipex->infile);
 	close(pipex->pipe_fds[1]);
 	exec_cmd(pipex->cmd1, pipex->envp);

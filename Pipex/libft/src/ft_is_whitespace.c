@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_error.c                                      :+:      :+:    :+:   */
+/*   ft_is_whitespace.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 21:42:32 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 14:29:47 by clu              ###   ########.fr       */
+/*   Created: 2025/02/25 15:28:05 by clu               #+#    #+#             */
+/*   Updated: 2025/02/25 15:44:58 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "libft.h"
 
-// Print error message and exit
-void	ft_pipex_error(const char *msg, int exit_code)
+int	ft_is_whitespace(char c)
 {
-	perror(msg);
-	exit(exit_code);
-}
-
-// Print command not found error message
-void	cmd_error(const char *cmd)
-{
-	ft_putstr_fd("pipex: ", STDERR_FILENO);
-	ft_putstr_fd(cmd, 2);
-	ft_putstr_fd(": command not found\n", STDERR_FILENO);
+	if (c == ' ' || c == '\t' || c == '\n')
+		return (1);
+	return (0);
 }

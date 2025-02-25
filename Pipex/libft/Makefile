@@ -5,64 +5,49 @@
 #                                                     +:+ +:+         +:+      #
 #    By: clu <clu@student.hive.fi>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/01/15 16:06:47 by clu               #+#    #+#              #
-#    Updated: 2025/02/25 15:26:17 by clu              ###   ########.fr        #
+#    Created: 2024/10/28 15:08:55 by clu               #+#    #+#              #
+#    Updated: 2025/02/25 15:31:17 by clu              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Program Name
-NAME = pipex
+NAME = libft.a
 
-# Comiler and Flags
-CC 		= cc
-CFLAGS 	= -Wall -Werror -Wextra
+# Compiler and Flags
+CC = cc
+CFLAGS = -Wall -Werror -Wextra
 
 # Directories
-SRC_DIR 		= ./src
-OBJ_DIR 		= ./obj
-LIBFT_DIR 		= ./libft
+SRC_DIR	= ./src
+OBJ_DIR	= ./obj
 
-# Libraries
-LIBFT = $(LIBFT_DIR)/libft.a
-
-# Header files
-HEADERS = -I./include -I$(LIBFT_DIR)/include
+# Header
+HEADER = -I./include
 
 # Source files and object files
 SRC = $(shell find $(SRC_DIR) -type f -name "*.c")
 OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-all: $(LIBFT) $(NAME)
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	@echo "Compiling $(NAME) ..."
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) $(HEADERS) -o $(NAME)
+	@echo "Creating static library $(NAME)"
+	ar rcs $(NAME) $(OBJ)
 	@echo "Done"
 
-# Compile the object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	@echo "Compiling $<..."
-	$(CC) $(CFLAGS) $(HEADERS) -c $< -o $@
-
-# Compile the Libft library
-$(LIBFT):
-	@echo "Compiling Libft..."
-	@make -C $(LIBFT_DIR)
-	@echo "Done"
+	$(CC) $(CFLAGS) $(HEADER) -c $< -o $@
 
 clean:
-	@make -C $(LIBFT_DIR) clean
-	@rm -rf $(OBJ_DIR)
-	@echo "Cleaned up all object files"
+	@echo "Cleaning libft object files"
+	@rm -f $(OBJ)
 
 fclean: clean
+	@echo "Cleanining $(NAME)"
 	@rm -f $(NAME)
-	@make -C $(LIBFT_DIR) fclean
-	@echo "Cleaned up $(NAME)"
-	@echo "Cleaned up everything"
 
 re: fclean all
-	@echo "Remade everything"
 
 .PHONY: all clean fclean re

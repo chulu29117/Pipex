@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/24 10:39:15 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 17:48:30 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ void	ft_pipex_error(const char *msg, int exit_code);
 void	cmd_error(const char *cmd);
 
 // Split the command
-int		is_whitespace(char c);
 int		count_cmds(char *cmd);
+char	*extract_quoted(char *cmd, int *i, char quote);
 char	*extract_str(char *cmd, int *i);
 char	**split_cmd(char *cmd);
 
