@@ -74,16 +74,14 @@ run_test() {
     echo -e "$exit_result_msg"
     echo ""
     
-    # Now run the pipex command under valgrind.
+    # Now run the pipex command under Valgrind without forcing an error exit code.
     echo -e "\e[1;33mRunning Valgrind test...\e[0m"
-    valgrind_output=$( valgrind --leak-check=full --error-exitcode=123 "${pipex_cmd[@]}" 2>&1 )
-    valgrind_exit=$?
+    valgrind_output=$( valgrind --leak-check=full "${pipex_cmd[@]}" 2>&1 )
     echo -e "\e[1;36mValgrind output/error:\e[0m"
     echo "$valgrind_output"
-    echo -e "\e[1;36mValgrind exit code:\e[0m $valgrind_exit"
-    echo ""
     
-    if [ "$valgrind_exit" -eq 0 ]; then
+    # Check Valgrind output for "ERROR SUMMARY: 0 errors"
+    if echo "$valgrind_output" | grep -q "ERROR SUMMARY: 0 errors"; then
         mem_result_msg="\e[1;32m[ OK ] No memory errors\e[0m"
         mem_ok=1
     else
@@ -91,8 +89,7 @@ run_test() {
         mem_ok=0
     fi
     echo -e "$mem_result_msg"
-    echo -e "\e[1;34m+-------------------------------------+\e[0m"
-    echo ""
+
     
     # Overall test result: both exit and memory tests must pass.
     if [ "$exit_ok" -eq 1 ] && [ "$mem_ok" -eq 1 ]; then

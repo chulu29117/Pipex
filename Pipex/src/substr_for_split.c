@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/02/26 11:07:25 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/26 11:22:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,39 @@ static void	skip_quotes(char *cmd, int *i, char *quote)
 		(*i)++;
 	}
 }
+
+// int	count_cmds(char *cmd)
+// {
+//	int		i;
+//	int		count;
+//	char	quote;
+
+//	i = 0;
+//	count = 0;
+//	while (cmd[i])
+//	{
+//		while (cmd[i] && ft_is_whitespace(cmd[i]))
+//			i++;
+//		if (cmd[i])
+//		{
+//			count++;
+//			if (cmd[i] == '\'' || cmd[i] == '\"')
+//			{
+//				quote = cmd[i++];
+//				while (cmd[i] && cmd[i] != quote)
+//					i++;
+//				if (cmd[i])
+//					i++;
+//			}
+//			else
+//			{
+//				while (cmd[i] && !ft_is_whitespace(cmd[i]))
+//					i++;
+//			}
+//		}
+//	}
+//	return (count);
+// }
 
 // Count the number of commands in the command string
 int	count_cmds(char *cmd)
@@ -105,46 +138,3 @@ char	*extract_str(char *cmd, int *i)
 	buf.result[buf.pos] = '\0';
 	return (buf.result);
 }
-
-// char	*extract_str(char *cmd, int *i)
-// {
-// 	int		capacity = 64;
-// 	int		pos = 0;
-// 	char	*result;
-// 	char	quote = 0;
-
-// 	result = malloc(capacity);
-// 	if (!result)
-// 		ft_pipex_error("pipex: malloc failed", 1);
-// 	while (cmd[*i] && ft_is_whitespace(cmd[*i]))
-// 		(*i)++;
-// 	skip_quotes(cmd, i, &quote);
-// 	while (cmd[*i])
-// 	{
-// 		if (quote)
-// 		{
-// 			if (cmd[*i] == '\\' && cmd[*i + 1] == quote)
-// 				(*i)++;
-// 			else if (cmd[*i] == quote)
-// 			{
-// 				(*i)++;
-// 				break ;
-// 			}
-// 		}
-// 		else if (ft_is_whitespace(cmd[*i]))
-// 		{
-// 			break ;
-// 		}
-// 		result[pos++] = cmd[*i];
-// 		(*i)++;
-// 		if (pos >= capacity - 1)
-// 		{
-// 			capacity *= 2;
-// 			result = ft_realloc(result, pos, capacity);
-// 			if (!result)
-// 				ft_pipex_error("pipex: realloc failed", 1);
-// 		}
-// 	}
-// 	result[pos] = '\0';
-// 	return (result);
-// }

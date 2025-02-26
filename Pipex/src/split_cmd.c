@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 17:01:20 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/26 11:37:25 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	free_cmds(char **cmds, int count)
 // Check and allocate memory for the command
 	// Count the number of commands in the command string
 	// Allocate memory for the command array
-static char	**check_cmd(char *cmd, int *i, int *cmd_count)
+static char	**check_cmd(char *cmd, int *cmd_count)
 {
 	char	**result;
 
@@ -42,7 +42,6 @@ static char	**check_cmd(char *cmd, int *i, int *cmd_count)
 	result = malloc(sizeof(char *) * (*cmd_count + 1));
 	if (!result)
 		ft_pipex_error("pipex: memory allocation failed", 1);
-	*i = 0;
 	return (result);
 }
 
@@ -56,7 +55,7 @@ char	**split_cmd(char *cmd)
 	int		cmd_index;
 	int		cmd_count;
 
-	cmds = check_cmd(cmd, &i, &cmd_count);
+	cmds = check_cmd(cmd, &cmd_count);
 	i = 0;
 	cmd_index = 0;
 	while (cmd[i])
