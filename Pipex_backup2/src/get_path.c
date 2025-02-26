@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 20:27:43 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 22:48:13 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ char	*find_path(char *cmd, char **envp)
 	if (!paths)
 		return (NULL);
 	full_path = exec_in_path(cmd, paths);
-	ft_free_array(paths);
+	if (paths != get_path_dirs(NULL))
+		ft_free_array(paths);
 	return (full_path);
 }

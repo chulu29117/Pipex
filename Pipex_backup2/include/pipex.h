@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 17:48:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 23:24:11 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include "libft.h"
 
+// Structure for pipex
 typedef struct s_pipex
 {
 	int		pipe_fds[2];
@@ -35,6 +36,14 @@ typedef struct s_pipex
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipex;
+
+// Structure for buffer for substrings
+typedef struct s_buffer
+{
+	char	*result;
+	int		pos;
+	int		capacity;
+}	t_buffer;
 
 // Initialize the pipex structure
 void	init_pipex(t_pipex *pipex, char **argv, char **envp);

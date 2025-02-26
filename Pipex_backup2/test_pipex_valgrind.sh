@@ -4,8 +4,10 @@
 # This script runs a series of tests for ./pipex and compares the output and exit code
 # with the expected behavior from Bash. For each test, it prints the test number, description,
 # the output (STDOUT+STDERR) and the exit code for both pipex and Bash.
-# The OK/KO message (colored) is determined by comparing only the exit codes.
-# At the end, a summary is printed with the count of OK tests and details of any failed ones.
+# Then it runs a valgrind test on the pipex command.
+# The OK/KO message for the exit code comparison is based solely on exit codes,
+# and a separate memory test result is printed.
+# At the end, a summary is shown with the overall test status.
 
 # Global counters and arrays.
 total_tests=0
@@ -25,7 +27,6 @@ run_test() {
     test_num=$1
     test_desc="$2"
     shift 2
-
     ((total_tests++))
 
     # Build the pipex command (arguments remain as passed).
@@ -60,17 +61,48 @@ run_test() {
     echo -e "\e[1;36mBash simulation output/error:\e[0m"
     echo "$bash_output"
     echo -e "\e[1;36mBash simulation exit code:\e[0m $bash_exit"
+    echo ""
     
     # Compare exit codes only.
     if [ "$pipex_exit" -eq "$bash_exit" ]; then
-        echo -e "\e[1;32m[ OK ] Exit codes match\e[0m"
+        exit_result_msg="\e[1;32m[ OK ] Exit codes match\e[0m"
+        exit_ok=1
+    else
+        exit_result_msg="\e[1;31m[ KO ] Exit codes differ\e[0m"
+        exit_ok=0
+    fi
+    echo -e "$exit_result_msg"
+    echo ""
+    
+    # Now run the pipex command under Valgrind without forcing an error exit code.
+    echo -e "\e[1;33mRunning Valgrind test...\e[0m"
+    valgrind_output=$( valgrind --leak-check=full "${pipex_cmd[@]}" 2>&1 )
+    echo -e "\e[1;36mValgrind output/error:\e[0m"
+    echo "$valgrind_output"
+    
+    # Check Valgrind output for "ERROR SUMMARY: 0 errors"
+    if echo "$valgrind_output" | grep -q "ERROR SUMMARY: 0 errors"; then
+        mem_result_msg="\e[1;32m[ OK ] No memory errors\e[0m"
+        mem_ok=1
+    else
+        mem_result_msg="\e[1;31m[ KO ] Memory errors detected\e[0m"
+        mem_ok=0
+    fi
+    echo -e "$mem_result_msg"
+
+    
+    # Overall test result: both exit and memory tests must pass.
+    if [ "$exit_ok" -eq 1 ] && [ "$mem_ok" -eq 1 ]; then
+        overall_msg="\e[1;32m[ OK ] Test passed\e[0m"
+        overall_ok=1
         ((ok_tests++))
     else
-        echo -e "\e[1;31m[ KO ] Exit codes differ\e[0m"
+        overall_msg="\e[1;31m[ KO ] Test failed\e[0m"
+        overall_ok=0
         failed_tests+=("$test_num")
     fi
-
-    echo -e "\e[1;34m+-------------------------------------+\e[0m"
+    echo -e "$overall_msg"
+    echo -e "\e[1;34m+=====================================+\e[0m"
     echo ""
 }
 
@@ -183,7 +215,7 @@ run_test_env 30 "PATH has '/' at the end of each entry" "PATH=/usr/local/bin/:/u
 # Test 31: Execute command in a subdirectory.
 run_test 31 "Execute command in a subdirectory" infile.txt subdir/script.sh wc outfile.txt
 
-# Summary of test results.
+# ----------------- Summary -----------------
 echo -e "\e[1;35m+=====================================+"
 echo -e "  Test Summary: $ok_tests out of $total_tests tests passed."
 if [ "$ok_tests" -eq "$total_tests" ]; then

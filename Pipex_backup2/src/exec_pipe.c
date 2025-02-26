@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 16:57:10 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/25 22:17:02 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void	second_child(t_pipex *pipex)
 		ft_pipex_error("pipex: second_child dup2 outfile failed", 1);
 	close(pipex->pipe_fds[0]);
 	close(pipex->outfile);
- 	exec_cmd(pipex->cmd2, pipex->envp);
+	exec_cmd(pipex->cmd2, pipex->envp);
 }
 
 // Execute the pipex command

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/02/26 11:22:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/26 12:09:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	check_quote(char *quote, char c)
 		*quote = 0;
 }
 
-// Skip quotes in the command string
+// skip_quotes detects the " and sets active quote to "
 static void	skip_quotes(char *cmd, int *i, char *quote)
 {
 	*quote = 0;
@@ -32,40 +32,12 @@ static void	skip_quotes(char *cmd, int *i, char *quote)
 	}
 }
 
-// int	count_cmds(char *cmd)
-// {
-//	int		i;
-//	int		count;
-//	char	quote;
-
-//	i = 0;
-//	count = 0;
-//	while (cmd[i])
-//	{
-//		while (cmd[i] && ft_is_whitespace(cmd[i]))
-//			i++;
-//		if (cmd[i])
-//		{
-//			count++;
-//			if (cmd[i] == '\'' || cmd[i] == '\"')
-//			{
-//				quote = cmd[i++];
-//				while (cmd[i] && cmd[i] != quote)
-//					i++;
-//				if (cmd[i])
-//					i++;
-//			}
-//			else
-//			{
-//				while (cmd[i] && !ft_is_whitespace(cmd[i]))
-//					i++;
-//			}
-//		}
-//	}
-//	return (count);
-// }
-
-// Count the number of commands in the command string
+// Count the number of elements in the command string
+	// Skip the leading whitespaces
+	// Count becomes 1 when a character is found
+	// Run until a whitespace is found or until a quote is found
+	// Check if the character is a quote character
+	// Continues until the closing quote is found
 int	count_cmds(char *cmd)
 {
 	int		i;
@@ -92,6 +64,12 @@ int	count_cmds(char *cmd)
 	return (cmd_count);
 }
 
+// Copy the quoted string to the buffer
+	// If an escaped quote if found and the next character is a quote
+	// Skip the escaped quote
+	// If the closing quote is found, break the loop
+	// Copy the character to the buffer
+	// If the buffer is full, reallocate memory
 static void	prep_substr(char *cmd, int *i, char quote, t_buffer *buf)
 {
 	while (cmd[*i])
@@ -120,6 +98,12 @@ static void	prep_substr(char *cmd, int *i, char quote, t_buffer *buf)
 	}
 }
 
+// Extract the string from the command
+	// Validate and allocate memory for the command array
+	// Skip the leading whitespaces
+	// skip_quotes detects the " and sets active quote to "
+	// Copy the quoted string to the buffer
+	// Return the substring stored in the buffer	
 char	*extract_str(char *cmd, int *i)
 {
 	t_buffer	buf;

@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 20:53:21 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/26 10:59:19 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,15 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 	if (!*path)
 	{
 		ft_free_array(*args);
-		ft_putstr_fd("pipex: ", STDERR_FILENO);
-		ft_putstr_fd(cmd, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		exit (127);
+		if (ft_strchr(cmd, '/') != NULL || cmd[0] == '.')
+		{
+			ft_putstr_fd("pipex: ", STDERR_FILENO);
+			ft_putstr_fd(cmd, STDERR_FILENO);
+			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		}
+		else
+			cmd_error(cmd);
+		exit(127);
 	}
 	return (0);
 }
@@ -62,11 +67,5 @@ void	exec_cmd(char *cmd, char **envp)
 		ft_putstr_fd("\n", STDERR_FILENO);
 		free(path);
 		ft_free_array(args);
-		if (errno == ENOENT)
-			ft_pipex_error(args[0], 127);
-		else if (errno == EACCES)
-			ft_pipex_error(args[0], 126);
-		else
-			exit(1);
 	}
 }
