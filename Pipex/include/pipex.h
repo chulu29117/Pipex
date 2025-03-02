@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 23:24:11 by clu              ###   ########.fr       */
+/*   Updated: 2025/02/28 14:36:48 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,41 +28,21 @@ typedef struct s_pipex
 	int		pipe_fds[2];
 	int		infile;
 	int		outfile;
-	char	*outfile_path;
-	char	*cmd1;
-	char	*cmd2;
-	char	**cmd_paths;
-	char	**envp;
-	pid_t	pid1;
-	pid_t	pid2;
+	char	*cmd_path;
+	char	**envp_paths;
+	pid_t	pid;
 }	t_pipex;
 
-// Structure for buffer for substrings
-typedef struct s_buffer
-{
-	char	*result;
-	int		pos;
-	int		capacity;
-}	t_buffer;
-
-// Initialize the pipex structure
-void	init_pipex(t_pipex *pipex, char **argv, char **envp);
-
 // Execute the pipex command
-int		exec_pipex(t_pipex *pipex);
-void	exec_cmd(char *cmd, char **envp);
+void	exec_cmd(char *cmd, char **envp, t_pipex *pipex);
 
 // Find the full path of the command
+char	*prep_cmd_path(char *cmd, char **envp, t_pipex *pipex);
 char	*find_path(char *cmd, char **envp);
 
 // Error handling
-void	ft_pipex_error(const char *msg, int exit_code);
+void	exit_error(void);
+void	put_error(const char *msg);
 void	cmd_error(const char *cmd);
-
-// Split the command
-int		count_cmds(char *cmd);
-char	*extract_quoted(char *cmd, int *i, char quote);
-char	*extract_str(char *cmd, int *i);
-char	**split_cmd(char *cmd);
 
 #endif
