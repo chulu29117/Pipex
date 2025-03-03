@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/02 23:35:10 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:28:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,37 +15,6 @@
 
 static void	first_child(t_pipex *pipex, char **argv, char **envp);
 static void	second_child(t_pipex *pipex, char **argv, char **envp);
-
-// Initialize the pipex structure
-	// Atempt to open the input file from argv[1] for reading
-	// If open fails, print error message then open /dev/null to continue pipe
-	// Store outfile path, cmd1, cmd2, and environment variables
-	// Create array of two file descriptors for the pipe: Read and Write ends
-// void	init_pipex(t_pipex *pipex, char **argv, char **envp)
-// {
-// 	int	empty_pipe[2];
-
-// 	pipex->infile = open(argv[1], O_RDONLY);
-// 	if (pipex->infile < 0)
-// 	{
-// 		ft_putstr_fd("pipex: ", STDERR_FILENO);
-// 		ft_putstr_fd(argv[1], STDERR_FILENO);
-// 		ft_putstr_fd(": ", STDERR_FILENO);
-// 		perror("");
-// 		{
-// 			if (pipe(empty_pipe) == -1)
-// 				ft_pipex_error("pipex: pipe create empty pipe", 1);
-// 			close(empty_pipe[1]);
-// 			pipex->infile = empty_pipe[0];
-// 		}
-// 	}
-// 	pipex->outfile_path = argv[4];
-// 	pipex->cmd1 = argv[2];
-// 	pipex->cmd2 = argv[3];
-// 	pipex->envp = envp;
-// 	if (pipe(pipex->pipe_fds) == -1)
-// 		ft_pipex_error("pipex: pipe creation failed", 1);
-// }
 
 // Execute the pipex command
 	// Fork the first child process (to exec cmd1)
@@ -79,7 +48,7 @@ int	exec_pipex(t_pipex *pipex, char **argv, char **envp)
 	waitpid(pipex->pid2, &status2, 0);
 	if (WIFEXITED(status2))
 		return (WEXITSTATUS(status2));
-	return (0);
+	return (1);
 }
 
 // First child process
@@ -95,14 +64,11 @@ static void	first_child(t_pipex *pipex, char **argv, char **envp)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
 		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		perror("");
-		exit(127);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(1);
 	}
-	if (dup2(pipex->pipe_fds[1], STDOUT_FILENO) == -1)
-		ft_pipex_error("pipex: first_child dup2 pipe_fds[1] failed", 1);
-	if (dup2(pipex->infile, STDIN_FILENO) == -1)
-		ft_pipex_error("pipex: first_child dup2 infile failed", 1);
+	dup2(pipex->pipe_fds[1], STDOUT_FILENO);
+	dup2(pipex->infile, STDIN_FILENO);
 	close(pipex->pipe_fds[0]);
 	exec_cmd(argv[2], envp);
 }
@@ -120,14 +86,11 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
 		ft_putstr_fd(argv[4], STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		perror("");
-		exit(127);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(1);
 	}
-	if (dup2(pipex->pipe_fds[0], STDIN_FILENO) == -1)
-		ft_pipex_error("pipex: second_child dup2 pipe_fds[0] failed", 1);
-	if (dup2(pipex->outfile, STDOUT_FILENO) == -1)
-		ft_pipex_error("pipex: second_child dup2 outfile failed", 1);
+	dup2(pipex->pipe_fds[0], STDIN_FILENO);
+	dup2(pipex->outfile, STDOUT_FILENO);
 	close(pipex->pipe_fds[1]);
 	exec_cmd(argv[3], envp);
 }

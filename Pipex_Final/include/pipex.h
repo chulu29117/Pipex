@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/02 23:29:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:07:25 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_pipex
 	int		infile;
 	int		outfile;
 	char	*cmd_path;
-	char	**envp_paths;
 	pid_t	pid1;
 	pid_t	pid2;
 }	t_pipex;
@@ -47,8 +46,6 @@ typedef struct s_buffer
 
 // Execute the pipex command
 int		exec_pipex(t_pipex *pipex, char **argv, char **envp);
-// char	*prep_cmd_path(char *cmd, char **envp, t_pipex *pipex);
-// void	exec_cmd(char *cmd, char **envp, t_pipex *pipex);
 void	exec_cmd(char *cmd, char **envp);
 
 // Find the full path of the command
