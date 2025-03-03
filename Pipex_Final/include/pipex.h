@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:07:25 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:32:39 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	cmd_error(const char *cmd);
 
 // Split the command
 int		count_cmds(char *cmd);
-char	*extract_quoted(char *cmd, int *i, char quote);
 char	*extract_str(char *cmd, int *i);
 char	**split_cmd(char *cmd);
 

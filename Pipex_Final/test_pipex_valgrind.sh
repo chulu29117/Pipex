@@ -50,7 +50,7 @@ run_test() {
     
     # Now simulate the equivalent bash pipeline:
     #   < infile cmd1 | cmd2 > outfile
-    bash_cmd="cat < \"$infile\" | $cmd1 | $cmd2 > \"$outfile\""
+    bash_cmd="cat < $infile $cmd1 | $cmd2 > $outfile"
     bash_output=$( { eval "$bash_cmd"; } 2>&1 )
     bash_exit=$?
     

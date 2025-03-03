@@ -6,14 +6,49 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/02/25 22:48:13 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:40:04 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+static char	**get_path_dirs(char **envp);
+static char	*exec_in_path(char *cmd, char **paths);
+
+// Find the full path of the command
+	// If the command is an absolute or relative path
+	// Get the directories from PATH
+	// Check if the command is in the directories in PATH
+char	*find_path(char *cmd, char **envp)
+{
+	char		**paths;
+	char		*full_path;
+
+	if (cmd[0] == '/' || cmd[0] == '.')
+	{
+		if (access (cmd, F_OK) != 0)
+		{
+			errno = ENOENT;
+			return (NULL);
+		}
+		else if (access(cmd, X_OK) != 0)
+		{
+			errno = EACCES;
+			return (NULL);
+		}
+		return (cmd);
+	}
+	paths = get_path_dirs(envp);
+	if (!paths)
+		return (NULL);
+	full_path = exec_in_path(cmd, paths);
+	if (paths != get_path_dirs(NULL))
+		ft_free_array(paths);
+	return (full_path);
+}
+
 // Get the directories in the PATH environment variable
-	// If the environment variable is not set, use the default paths
+	// If the environment variable is not set, return NULL
 	// Find the PATH environment variable
 	// Split the PATH environment variable by ':' and return the directories
 static char	**get_path_dirs(char **envp)
@@ -60,36 +95,4 @@ static char	*exec_in_path(char *cmd, char **paths)
 		i++;
 	}
 	return (NULL);
-}
-
-// Find the full path of the command
-	// If the command is an absolute or relative path
-	// Get the directories from PATH
-	// Check if the command is in the directories in PATH
-char	*find_path(char *cmd, char **envp)
-{
-	char		**paths;
-	char		*full_path;
-
-	if (cmd[0] == '/' || cmd[0] == '.')
-	{
-		if (access (cmd, F_OK) != 0)
-		{
-			errno = ENOENT;
-			return (NULL);
-		}
-		else if (access(cmd, X_OK) != 0)
-		{
-			errno = EACCES;
-			return (NULL);
-		}
-		return (cmd);
-	}
-	paths = get_path_dirs(envp);
-	if (!paths)
-		return (NULL);
-	full_path = exec_in_path(cmd, paths);
-	if (paths != get_path_dirs(NULL))
-		ft_free_array(paths);
-	return (full_path);
 }

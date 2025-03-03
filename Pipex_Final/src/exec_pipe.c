@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:28:24 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:47:01 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp);
 // Execute the pipex command
 	// Fork the first child process (to exec cmd1)
 	// Child: Run the first child process
-	// Parent: Close the input file descriptor (not needed anymore)
 	// Fork the second child process (to exec cmd2)
 	// Child: Run the second child process
 	// Parent: Close the read and write end of the pipe
@@ -52,10 +51,10 @@ int	exec_pipex(t_pipex *pipex, char **argv, char **envp)
 }
 
 // First child process
-	// Close the read end of the pipe, not used by this child process
+	// Open the input file for reading
 	// Redirect the standard input to the input file
 	// Redirect the standard output to the write end of the pipe
-	// Close the original descriptors after redirection
+	// Close the input file and the read end of the pipe
 	// Execute the first command
 static void	first_child(t_pipex *pipex, char **argv, char **envp)
 {
@@ -69,15 +68,16 @@ static void	first_child(t_pipex *pipex, char **argv, char **envp)
 	}
 	dup2(pipex->pipe_fds[1], STDOUT_FILENO);
 	dup2(pipex->infile, STDIN_FILENO);
+	close(pipex->infile);
 	close(pipex->pipe_fds[0]);
 	exec_cmd(argv[2], envp);
 }
 
 // Second child process
-	// Close the write end of the pipe
-	// Redirect the standard input to the read end of the pipe
 	// Open the output file for writing	
+	// Redirect the standard input to the read end of the pipe
 	// Redirect the standard output to the output file
+	// Close the output file and the write end of the pipe
 	// Execute the second command
 static void	second_child(t_pipex *pipex, char **argv, char **envp)
 {
@@ -91,6 +91,7 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp)
 	}
 	dup2(pipex->pipe_fds[0], STDIN_FILENO);
 	dup2(pipex->outfile, STDOUT_FILENO);
+	close(pipex->outfile);
 	close(pipex->pipe_fds[1]);
 	exec_cmd(argv[3], envp);
 }

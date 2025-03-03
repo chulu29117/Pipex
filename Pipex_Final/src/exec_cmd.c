@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 10:44:33 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/03 11:55:05 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp);
 // Execute the command
 	// Prepare the command (split arguments and find full path)
 	// Execute the command
-		// If the command is not found, exit with status 127
-		// If the permission is denied, exit with status 126
+	// If the command is not found, exit with status 127
+	// If the permission is denied, exit with status 126
 void	exec_cmd(char *cmd, char **envp)
 {
 	char	**args;
@@ -68,7 +68,7 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 		}
 		else
 			cmd_error(cmd);
-		return(127);
+		return (127);
 	}
 	return (0);
 }
