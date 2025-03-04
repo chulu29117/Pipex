@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 16:27:36 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 22:54:20 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ char	*find_path(char *cmd, char **envp);
 // Error handling
 void	ft_pipex_error(const char *msg, int exit_code);
 void	cmd_error(const char *cmd);
+int		valid_cmd(char *cmd);
+void	execve_error(char *cmd);
 
 // Split the command
 int		count_cmds(char *cmd);

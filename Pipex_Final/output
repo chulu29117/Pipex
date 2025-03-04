@@ -1,0 +1,10 @@
+total 36
+drwxr-xr-x 2 clu clu 4096 Mar  4 10:27 .
+drwxr-xr-x 7 clu clu 4096 Mar  4 22:49 ..
+-rw-r--r-- 1 clu clu 2486 Mar  4 22:48 exec_cmd.c
+-rw-r--r-- 1 clu clu 3473 Mar  4 17:59 exec_pipe.c
+-rw-r--r-- 1 clu clu 3487 Mar  4 16:30 extract_str.c
+-rw-r--r-- 1 clu clu 2717 Mar  4 22:03 get_path.c
+-rw-r--r-- 1 clu clu 1238 Mar  4 10:27 pipex.c
+-rw-r--r-- 1 clu clu 1518 Mar  4 22:39 pipex_error.c
+-rw-r--r-- 1 clu clu 2203 Mar  4 16:29 split_cmd.c

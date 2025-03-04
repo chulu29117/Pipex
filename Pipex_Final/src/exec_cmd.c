@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 16:52:36 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 22:53:42 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp);
 	// Execute the command
 	// If the command is not found, exit with status 127
 	// If the permission is denied, exit with status 126
-void exec_cmd(char *cmd, char **envp)
+void	exec_cmd(char *cmd, char **envp)
 {
 	char	**args;
 	char	*path;
@@ -29,7 +29,7 @@ void exec_cmd(char *cmd, char **envp)
 	if (exit_code != 0)
 	{
 		ft_free_array(args);
-		if (exit_code == 127)
+		if (exit_code == 127 && ft_strchr(cmd, '/') == NULL)
 			cmd_error(cmd);
 		else
 			ft_pipex_error(cmd, exit_code);
@@ -38,11 +38,8 @@ void exec_cmd(char *cmd, char **envp)
 	{
 		free(path);
 		ft_free_array(args);
-		if (errno == EACCES)
-			ft_pipex_error(cmd, 126);
-		else if (errno == ENOENT)
-			ft_pipex_error(cmd, 127);
-		exit(0);
+		execve_error(cmd);
+		exit(1);
 	}
 }
 
@@ -60,7 +57,7 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 	}
 	if (!(*args)[0])
 		return (127);
-	if (ft_strchr(*args[0], '/') != NULL || *args[0][0] == '.')
+	if (ft_strchr((*args)[0], '/') != NULL || (*args)[0][0] == '.')
 		*path = ft_strdup((*args)[0]);
 	else
 		*path = find_path((*args)[0], envp);
