@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 17:59:44 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 23:35:53 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	first_child(t_pipex *pipex, char **argv, char **envp)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
 		ft_putstr_fd(argv[1], STDERR_FILENO);
-		perror(": ");
+		perror("");
 		exit(1);
 	}
 	dup2(pipex->pipe_fds[1], STDOUT_FILENO);
@@ -85,7 +85,7 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
 		ft_putstr_fd(argv[4], STDERR_FILENO);
-		perror(": ");
+		perror("");
 		exit(1);
 	}
 	dup2(pipex->pipe_fds[0], STDIN_FILENO);
