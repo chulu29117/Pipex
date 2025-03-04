@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:51 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:55:05 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 16:52:36 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp);
 	// Execute the command
 	// If the command is not found, exit with status 127
 	// If the permission is denied, exit with status 126
-void	exec_cmd(char *cmd, char **envp)
+void exec_cmd(char *cmd, char **envp)
 {
 	char	**args;
 	char	*path;
@@ -27,17 +27,22 @@ void	exec_cmd(char *cmd, char **envp)
 
 	exit_code = prepare_cmd(cmd, &args, &path, envp);
 	if (exit_code != 0)
-		exit(exit_code);
+	{
+		ft_free_array(args);
+		if (exit_code == 127)
+			cmd_error(cmd);
+		else
+			ft_pipex_error(cmd, exit_code);
+	}
 	if (execve(path, args, envp) == -1)
 	{
-		ft_putstr_fd("pipex: ", STDERR_FILENO);
-		ft_putstr_fd(args[0], STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
 		free(path);
 		ft_free_array(args);
-		exit(127);
+		if (errno == EACCES)
+			ft_pipex_error(cmd, 126);
+		else if (errno == ENOENT)
+			ft_pipex_error(cmd, 127);
+		exit(0);
 	}
 }
 
@@ -49,25 +54,22 @@ static int	prepare_cmd(char *cmd, char ***args, char **path, char **envp)
 {
 	*args = split_cmd(cmd);
 	if (!*args)
-		ft_pipex_error("pipex: memory allocation failed", 1);
-	if (!(*args)[0])
 	{
-		ft_free_array(*args);
-		cmd_error(cmd);
-		return (127);
+		ft_putstr_fd("pipex: memory allocation failed", STDERR_FILENO);
+		return (1);
 	}
-	*path = find_path((*args)[0], envp);
+	if (!(*args)[0])
+		return (127);
+	if (ft_strchr(*args[0], '/') != NULL || *args[0][0] == '.')
+		*path = ft_strdup((*args)[0]);
+	else
+		*path = find_path((*args)[0], envp);
 	if (!*path)
 	{
-		ft_free_array(*args);
-		if (ft_strchr(cmd, '/') != NULL || cmd[0] == '.')
-		{
-			ft_putstr_fd("pipex: ", STDERR_FILENO);
-			ft_putstr_fd(cmd, STDERR_FILENO);
-			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		}
-		else
-			cmd_error(cmd);
+		if (errno == EACCES)
+			return (126);
+		else if (errno == ENOENT)
+			return (127);
 		return (127);
 	}
 	return (0);

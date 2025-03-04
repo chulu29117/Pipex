@@ -6,12 +6,11 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:47:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 10:49:49 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-#include <signal.h>
 
 static void	first_child(t_pipex *pipex, char **argv, char **envp);
 static void	second_child(t_pipex *pipex, char **argv, char **envp);

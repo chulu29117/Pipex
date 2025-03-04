@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:36:20 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 16:29:27 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,7 @@ static char	**check_cmd(char *cmd, int *cmd_count)
 	char	**result;
 
 	if (!cmd || cmd[0] == '\0')
-	{
 		cmd_error(cmd);
-		exit(127);
-	}
 	*cmd_count = count_cmds(cmd);
 	result = malloc(sizeof(char *) * (*cmd_count + 1));
 	if (!result)

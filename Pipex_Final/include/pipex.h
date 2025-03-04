@@ -6,19 +6,16 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/03 11:32:39 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/04 16:27:36 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include <unistd.h>
 # include <fcntl.h>
 # include <stdio.h>
-# include <stdlib.h>
 # include <sys/wait.h>
-# include <string.h>
 # include <errno.h>
 # include "libft.h"
 
