@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/03/05 10:56:31 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 13:29:47 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ static char	*exec_in_path(char *cmd, char **paths)
 	char	*full_path;
 	char	*temp;
 	int		i;
+	int		errno_flag;
 
 	i = 0;
+	errno_flag = 0;
 	while (paths[i])
 	{
 		temp = ft_strjoin(paths[i], "/");
@@ -84,10 +86,11 @@ static char	*exec_in_path(char *cmd, char **paths)
 		free(temp);
 		if (!full_path)
 			return (NULL);
-		if (access(full_path, F_OK) == 0 && access(full_path, X_OK) == 0)
+		if (check_cmd_errno(full_path, &errno_flag))
 			return (full_path);
 		free(full_path);
 		i++;
 	}
+	errno = errno_flag;
 	return (NULL);
 }

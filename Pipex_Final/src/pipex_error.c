@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 21:42:32 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 23:31:09 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 13:28:12 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,18 @@ void	execve_error(char *cmd)
 		else
 			ft_pipex_error(cmd, 127);
 	}
+}
+
+char	*check_cmd_errno(char *full_path, int *errno_flag)
+{
+	if (access(full_path, F_OK) == 0)
+	{
+		if (access(full_path, X_OK) == 0)
+			return (full_path);
+		else
+			*errno_flag = EACCES;
+	}
+	else
+		*errno_flag = ENOENT;
+	return (NULL);
 }
