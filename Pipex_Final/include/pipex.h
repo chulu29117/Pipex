@@ -6,18 +6,18 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/05 13:27:25 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 13:59:24 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
+# include "libft.h"
 # include <fcntl.h>
 # include <stdio.h>
 # include <sys/wait.h>
 # include <errno.h>
-# include "libft.h"
 
 // Structure for pipex
 typedef struct s_pipex
@@ -54,6 +54,7 @@ void	cmd_error(const char *cmd);
 int		valid_cmd(char *cmd);
 void	execve_error(char *cmd);
 char	*check_cmd_errno(char *full_path, int *errno_flag);
+void	free_exit_buffer(char *buffer, int exit_code);
 
 // Split the command
 int		count_cmds(char *cmd);

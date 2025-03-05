@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 16:30:30 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 13:59:41 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*extract_str(char *cmd, int *i)
 	buf.pos = 0;
 	buf.result = malloc(buf.capacity);
 	if (!buf.result)
-		ft_pipex_error("pipex: malloc failed", 1);
+		free_exit_buffer(buf.result, 1);
 	while (cmd[*i] && ft_is_whitespace(cmd[*i]))
 		(*i)++;
 	quote = 0;
@@ -87,7 +87,7 @@ static void	prep_substr(char *cmd, int *i, char quote, t_buffer *buf)
 			buf->capacity *= 2;
 			buf->result = ft_realloc(buf->result, buf->pos, buf->capacity);
 			if (!buf->result)
-				ft_pipex_error("pipex: realloc failed", 1);
+				free_exit_buffer(buf->result, 1);
 		}
 	}
 }

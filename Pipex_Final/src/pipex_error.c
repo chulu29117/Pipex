@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 21:42:32 by clu               #+#    #+#             */
-/*   Updated: 2025/03/05 13:28:12 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 17:18:25 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,10 @@ char	*check_cmd_errno(char *full_path, int *errno_flag)
 	else
 		*errno_flag = ENOENT;
 	return (NULL);
+}
+
+void	free_exit_buffer(char *buffer, int exit_code)
+{
+	free(buffer);
+	ft_pipex_error("pipex: malloc failed", exit_code);
 }
