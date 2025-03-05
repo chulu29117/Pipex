@@ -50,7 +50,7 @@ run_test() {
     
     # Now simulate the equivalent bash pipeline:
     #   < infile cmd1 | cmd2 > outfile
-    bash_cmd="cat < $infile $cmd1 | $cmd2 > $outfile"
+    bash_cmd="cat < $infile | $cmd1 | $cmd2 > $outfile"
     bash_output=$( { eval "$bash_cmd"; } 2>&1 )
     bash_exit=$?
     
@@ -214,6 +214,39 @@ run_test_env 30 "PATH has '/' at the end of each entry" "PATH=/usr/local/bin/:/u
 
 # Test 31: Execute command in a subdirectory.
 run_test 31 "Execute command in a subdirectory" infile.txt subdir/script.sh wc outfile.txt
+
+# Test 32: Input file exists but does not have read permissions.
+# Create a file 'no_read.txt' and remove its read permissions.
+chmod 000 no_read.txt
+run_test 32 "Input file exists but no read permission (should output error 126 or similar)" no_read.txt cat wc outfile.txt
+chmod 644 no_read.txt  # Restore permissions after test
+
+# Test 33: Output file exists but does not have write permissions.
+# Create a file 'no_write.txt' and remove its write permissions.
+touch no_write.txt
+chmod 444 no_write.txt
+run_test 33 "Output file exists but no write permission (should output error 126 or similar)" infile.txt cat wc no_write.txt
+rm -f no_write.txt
+
+# Test 34: First command exists but does not have execution permission.
+# Create or ensure no_exec_cmd1.sh exists with valid content, then remove its execute permissions.
+touch no_exec_cmd1.sh
+chmod 644 no_exec_cmd1.sh
+run_test 34 "First command exists but has no execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh wc outfile.txt
+chmod 755 no_exec_cmd1.sh  # Restore permissions after test
+
+# Test 35: Second command exists but does not have execution permission.
+# Create or ensure no_exec_cmd2.sh exists with valid content, then remove its execute permissions.
+touch no_exec_cmd2.sh
+chmod 644 no_exec_cmd2.sh
+run_test 35 "Second command exists but has no execution permission (should output error 126)" infile.txt cat ./no_exec_cmd2.sh outfile.txt
+chmod 755 no_exec_cmd2.sh  # Restore permissions after test
+
+# Test 36: Both commands exist but neither has execution permission.
+touch no_exec_cmd1.sh no_exec_cmd2.sh
+chmod 644 no_exec_cmd1.sh no_exec_cmd2.sh
+run_test 36 "Both commands exist but neither has execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh ./no_exec_cmd2.sh outfile.txt
+chmod 755 no_exec_cmd1.sh no_exec_cmd2.sh  # Restore permissions after test
 
 # ----------------- Summary -----------------
 echo -e "\e[1;35m+=====================================+"

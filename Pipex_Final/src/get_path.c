@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 22:54:50 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/05 10:56:31 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static char	**get_path_dirs(char **envp)
 // Check if the command is in the directories in the PATH
 	// temp = directory + '/'
 	// full_path = directory + '/' + command
-	// Check if the command is executable, X_OK mode for executable
+	// Check if the command exists and is executable
 static char	*exec_in_path(char *cmd, char **paths)
 {
 	char	*full_path;
@@ -84,7 +84,7 @@ static char	*exec_in_path(char *cmd, char **paths)
 		free(temp);
 		if (!full_path)
 			return (NULL);
-		if (access(full_path, X_OK) == 0)
+		if (access(full_path, F_OK) == 0 && access(full_path, X_OK) == 0)
 			return (full_path);
 		free(full_path);
 		i++;
