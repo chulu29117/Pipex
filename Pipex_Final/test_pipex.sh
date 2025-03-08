@@ -6,6 +6,95 @@
 # the output (STDOUT+STDERR) and the exit code for both pipex and Bash.
 # The OK/KO message (colored) is determined by comparing only the exit codes.
 # At the end, a summary is printed with the count of OK tests and details of any failed ones.
+# Finally, all files created during setup are removed.
+
+# ----------------- Setup: Create Required Files -----------------
+
+# Create infile.txt if it doesn't exist.
+if [ ! -f infile.txt ]; then
+    echo "This is a sample content for infile.txt" > infile.txt
+fi
+
+# Create a simple script.sh (echoes stdin to stdout).
+if [ ! -f script.sh ]; then
+    echo "#!/bin/bash" > script.sh
+    echo "cat" >> script.sh
+    chmod +x script.sh
+fi
+
+# Create a script with a space in its name.
+if [ ! -f "script space.sh" ]; then
+    echo "#!/bin/bash" > "script space.sh"
+    echo "cat" >> "script space.sh"
+    chmod +x "script space.sh"
+fi
+
+# Create a script with an escaped quote in its name.
+if [ ! -f 'script"quote.sh' ]; then
+    echo "#!/bin/bash" > 'script"quote.sh'
+    echo "cat" >> 'script"quote.sh'
+    chmod +x 'script"quote.sh'
+fi
+
+# Create no_exec_cmd1.sh and no_exec_cmd2.sh.
+if [ ! -f no_exec_cmd1.sh ]; then
+    echo "#!/bin/bash" > no_exec_cmd1.sh
+    echo "cat" >> no_exec_cmd1.sh
+    chmod +x no_exec_cmd1.sh
+fi
+if [ ! -f no_exec_cmd2.sh ]; then
+    echo "#!/bin/bash" > no_exec_cmd2.sh
+    echo "cat" >> no_exec_cmd2.sh
+    chmod +x no_exec_cmd2.sh
+fi
+
+# Create no_x_script.sh for tests 18 and 19.
+if [ ! -f no_x_script.sh ]; then
+    echo "#!/bin/bash" > no_x_script.sh
+    echo "cat" >> no_x_script.sh
+    chmod +x no_x_script.sh
+fi
+
+# Create middle_fail.sh that simulates failure in the middle.
+if [ ! -f middle_fail.sh ]; then
+    echo "#!/bin/bash" > middle_fail.sh
+    echo "echo 'This script fails in the middle'" >> middle_fail.sh
+    echo "exit 1" >> middle_fail.sh
+    chmod +x middle_fail.sh
+fi
+
+# Create no_read.txt for input file with no read permissions.
+if [ ! -f no_read.txt ]; then
+    echo "Content for no_read.txt" > no_read.txt
+fi
+
+# Create no_write.txt for output file test.
+if [ ! -f no_write.txt ]; then
+    echo "Content for no_write.txt" > no_write.txt
+fi
+
+# Create a subdirectory "subdir" and a script inside it.
+if [ ! -d subdir ]; then
+    mkdir subdir
+fi
+if [ ! -f subdir/script.sh ]; then
+    echo "#!/bin/bash" > subdir/script.sh
+    echo "cat" >> subdir/script.sh
+    chmod +x subdir/script.sh
+fi
+
+# ----------------- End Setup -----------------
+
+# ----------------- Cleanup Function -----------------
+cleanup() {
+    echo -e "\n\e[1;35mCleaning up created files and directories...\e[0m"
+    rm -f infile.txt script.sh "script space.sh" 'script"quote.sh' \
+          no_exec_cmd1.sh no_exec_cmd2.sh no_x_script.sh middle_fail.sh \
+          no_read.txt no_write.txt inexistent.txt no_w_perm outfile.txt
+    rm -rf subdir
+}
+trap cleanup EXIT
+# ------------------------------------------------------
 
 # Global counters and arrays.
 total_tests=0
@@ -49,8 +138,8 @@ run_test() {
     
     # Now simulate the equivalent bash pipeline:
     #   < infile cmd1 | cmd2 > outfile
-    bash_cmd="cat < $infile | $cmd1 | $cmd2 > $outfile"
-    bash_output=$( { eval "$bash_cmd"; } 2>&1 )
+    bash_cmd="cat < '$infile' | $cmd1 | $cmd2 > '$outfile'"
+    bash_output=$(bash -c "$bash_cmd" 2>&1)
     bash_exit=$?
     
     echo -e "\e[1;36mPipex output/error:\e[0m"
@@ -85,7 +174,7 @@ run_test_env() {
     env $env_setting run_test "$test_num" "$test_desc" "$@"
 }
 
-# ----------------- Mandatory Tests -----------------
+# ----------------- Tests -----------------
 print_header "Mandatory Tests"
 
 # Test 1: Normal parameters, simple commands.
@@ -113,10 +202,10 @@ run_test 7 'Double quotes inside single quotes (awk argument)' infile.txt 'sed "
 run_test 8 "Command that is in the same folder" infile.txt ./script.sh wc outfile.txt
 
 # Test 9: Script with a space in its name.
-run_test 9 "Script in the same folder with a name containing a space" infile.txt './script space.sh' wc outfile.txt
+run_test 9 "Script in the same folder with a name containing a space" infile.txt "./script space.sh" wc outfile.txt
 
-# Test 10: Script with an escaped quote in its name.
-run_test 10 "Script with a name containing an escaped quote" infile.txt './script\"quote.sh' wc outfile.txt
+# Test 10: Command with multiple arguments.
+run_test 10 "Command with multiple arguments" infile.txt "cut -d, -f1" "wc -w" outfile.txt
 
 # Test 11: Script with a space in its name (again, alternate quoting).
 run_test 11 "Script with a name containing a space" infile.txt "./script space.sh" wc outfile.txt
@@ -184,39 +273,41 @@ run_test_env 30 "PATH has '/' at the end of each entry" "PATH=/usr/local/bin/:/u
 run_test 31 "Execute command in a subdirectory" infile.txt subdir/script.sh wc outfile.txt
 
 # Test 32: Input file exists but does not have read permissions.
-# Create a file 'no_read.txt' and remove its read permissions.
 chmod 000 no_read.txt
 run_test 32 "Input file exists but no read permission (should output error 126 or similar)" no_read.txt cat wc outfile.txt
 chmod 644 no_read.txt  # Restore permissions after test
 
 # Test 33: Output file exists but does not have write permissions.
-# Create a file 'no_write.txt' and remove its write permissions.
 touch no_write.txt
 chmod 444 no_write.txt
 run_test 33 "Output file exists but no write permission (should output error 126 or similar)" infile.txt cat wc no_write.txt
 rm -f no_write.txt
 
 # Test 34: First command exists but does not have execution permission.
-# Create or ensure no_exec_cmd1.sh exists with valid content, then remove its execute permissions.
-touch no_exec_cmd1.sh
-chmod 644 no_exec_cmd1.sh
-run_test 34 "First command exists but has no execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh wc outfile.txt
-chmod 755 no_exec_cmd1.sh  # Restore permissions after test
+(
+    touch no_exec_cmd1.sh
+    chmod 644 no_exec_cmd1.sh
+    run_test 34 "First command exists but has no execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh wc outfile.txt
+    rm -f no_exec_cmd1.sh
+)
 
 # Test 35: Second command exists but does not have execution permission.
-# Create or ensure no_exec_cmd2.sh exists with valid content, then remove its execute permissions.
-touch no_exec_cmd2.sh
-chmod 644 no_exec_cmd2.sh
-run_test 35 "Second command exists but has no execution permission (should output error 126)" infile.txt cat ./no_exec_cmd2.sh outfile.txt
-chmod 755 no_exec_cmd2.sh  # Restore permissions after test
+(
+    touch no_exec_cmd2.sh
+    chmod 644 no_exec_cmd2.sh
+    run_test 35 "Second command exists but has no execution permission (should output error 126)" infile.txt cat ./no_exec_cmd2.sh outfile.txt
+    rm -f no_exec_cmd2.sh
+)
 
 # Test 36: Both commands exist but neither has execution permission.
-touch no_exec_cmd1.sh no_exec_cmd2.sh
-chmod 644 no_exec_cmd1.sh no_exec_cmd2.sh
-run_test 36 "Both commands exist but neither has execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh ./no_exec_cmd2.sh outfile.txt
-chmod 755 no_exec_cmd1.sh no_exec_cmd2.sh  # Restore permissions after test
+(
+    touch no_exec_cmd1.sh no_exec_cmd2.sh
+    chmod 644 no_exec_cmd1.sh no_exec_cmd2.sh
+    run_test 36 "Both commands exist but neither has execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh ./no_exec_cmd2.sh outfile.txt
+    rm -f no_exec_cmd1.sh no_exec_cmd2.sh
+)
 
-
+# ----------------- End Tests -----------------
 
 # Summary of test results.
 echo -e "\e[1;35m+=====================================+"

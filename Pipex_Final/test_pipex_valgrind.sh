@@ -9,6 +9,94 @@
 # and a separate memory test result is printed.
 # At the end, a summary is shown with the overall test status.
 
+# ----------------- Setup: Create Required Files -----------------
+
+# Create infile.txt if it doesn't exist.
+if [ ! -f infile.txt ]; then
+    echo "This is a sample content for infile.txt" > infile.txt
+fi
+
+# Create a simple script.sh (echoes stdin to stdout).
+if [ ! -f script.sh ]; then
+    echo "#!/bin/bash" > script.sh
+    echo "cat" >> script.sh
+    chmod +x script.sh
+fi
+
+# Create a script with a space in its name.
+if [ ! -f "script space.sh" ]; then
+    echo "#!/bin/bash" > "script space.sh"
+    echo "cat" >> "script space.sh"
+    chmod +x "script space.sh"
+fi
+
+# Create a script with an escaped quote in its name.
+if [ ! -f 'script"quote.sh' ]; then
+    echo "#!/bin/bash" > 'script"quote.sh'
+    echo "cat" >> 'script"quote.sh'
+    chmod +x 'script"quote.sh'
+fi
+
+# Create no_exec_cmd1.sh and no_exec_cmd2.sh.
+if [ ! -f no_exec_cmd1.sh ]; then
+    echo "#!/bin/bash" > no_exec_cmd1.sh
+    echo "cat" >> no_exec_cmd1.sh
+    chmod +x no_exec_cmd1.sh
+fi
+if [ ! -f no_exec_cmd2.sh ]; then
+    echo "#!/bin/bash" > no_exec_cmd2.sh
+    echo "cat" >> no_exec_cmd2.sh
+    chmod +x no_exec_cmd2.sh
+fi
+
+# Create no_x_script.sh for tests 18 and 19.
+if [ ! -f no_x_script.sh ]; then
+    echo "#!/bin/bash" > no_x_script.sh
+    echo "cat" >> no_x_script.sh
+    chmod +x no_x_script.sh
+fi
+
+# Create middle_fail.sh that simulates failure in the middle.
+if [ ! -f middle_fail.sh ]; then
+    echo "#!/bin/bash" > middle_fail.sh
+    echo "echo 'This script fails in the middle'" >> middle_fail.sh
+    echo "exit 1" >> middle_fail.sh
+    chmod +x middle_fail.sh
+fi
+
+# Create no_read.txt for input file with no read permissions.
+if [ ! -f no_read.txt ]; then
+    echo "Content for no_read.txt" > no_read.txt
+fi
+
+# Create no_write.txt for output file test.
+if [ ! -f no_write.txt ]; then
+    echo "Content for no_write.txt" > no_write.txt
+fi
+
+# Create a subdirectory "subdir" and a script inside it.
+if [ ! -d subdir ]; then
+    mkdir subdir
+fi
+if [ ! -f subdir/script.sh ]; then
+    echo "#!/bin/bash" > subdir/script.sh
+    echo "cat" >> subdir/script.sh
+    chmod +x subdir/script.sh
+fi
+
+# ----------------- End Setup -----------------
+
+# ----------------- Cleanup Function -----------------
+cleanup() {
+    echo -e "\n\e[1;35mCleaning up created files and directories...\e[0m"
+    rm -f infile.txt script.sh "script space.sh" 'script"quote.sh' \
+          no_exec_cmd1.sh no_exec_cmd2.sh no_x_script.sh middle_fail.sh \
+          no_read.txt no_write.txt inexistent.txt no_w_perm outfile.txt
+    rm -rf subdir
+}
+trap cleanup EXIT
+# ------------------------------------------------------
+
 # Global counters and arrays.
 total_tests=0
 ok_tests=0
@@ -50,8 +138,8 @@ run_test() {
     
     # Now simulate the equivalent bash pipeline:
     #   < infile cmd1 | cmd2 > outfile
-    bash_cmd="cat < $infile | $cmd1 | $cmd2 > $outfile"
-    bash_output=$( { eval "$bash_cmd"; } 2>&1 )
+    bash_cmd="cat < '$infile' | $cmd1 | $cmd2 > '$outfile'"
+    bash_output=$(bash -c "$bash_cmd" 2>&1)
     bash_exit=$?
     
     echo -e "\e[1;36mPipex output/error:\e[0m"

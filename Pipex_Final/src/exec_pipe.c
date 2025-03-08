@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/05 10:51:01 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/08 21:07:06 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	exec_pipex(t_pipex *pipex, char **argv, char **envp)
 		ft_pipex_error("pipex: pipe creation failed", 1);
 	pipex->pid1 = fork();
 	if (pipex->pid1 == -1)
-		ft_pipex_error("pipex: fork failed", 1);
+		close_fd(pipex);
 	if (pipex->pid1 == 0)
 		first_child(pipex, argv, envp);
 	pipex->pid2 = fork();
 	if (pipex->pid2 == -1)
-		ft_pipex_error("pipex: fork failed", 1);
+		close_fd(pipex);
 	if (pipex->pid2 == 0)
 		second_child(pipex, argv, envp);
 	close(pipex->pipe_fds[0]);
@@ -61,8 +61,7 @@ static void	first_child(t_pipex *pipex, char **argv, char **envp)
 	if (pipex->infile == -1)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
-		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		perror(argv[1]);
 		exit(1);
 	}
 	dup2(pipex->pipe_fds[1], STDOUT_FILENO);
@@ -84,8 +83,7 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp)
 	if (pipex->outfile == -1)
 	{
 		ft_putstr_fd("pipex: ", STDERR_FILENO);
-		ft_putstr_fd(argv[4], STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		perror(argv[4]);
 		exit(1);
 	}
 	dup2(pipex->pipe_fds[0], STDIN_FILENO);
