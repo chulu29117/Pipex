@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/27 18:29:28 by clu               #+#    #+#             */
-/*   Updated: 2025/03/08 21:16:19 by clu              ###   ########.fr       */
+/*   Created: 2025/03/08 21:09:56 by clu               #+#    #+#             */
+/*   Updated: 2025/03/08 21:10:00 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-// Check number of arguments
-	// Initialize the pipex structure
-	// Execute the pipex command
-int	main(int argc, char **argv, char **envp)
+void	free_exit_buffer(char *buffer, int exit_code)
 {
-	t_pipex	pipex;
-	int		exit_status;
+	free(buffer);
+	ft_pipex_error("pipex: malloc failed", exit_code);
+}
 
-	if (argc != 5)
-	{
-		ft_putstr_fd("Usage: ./pipex file1 cmd1 cmd2 file2\n", STDERR_FILENO);
-		return (EXIT_FAILURE);
-	}
-	ft_bzero(&pipex, sizeof(pipex));
-	exit_status = exec_pipex(&pipex, argv, envp);
-	return (exit_status);
+void	close_fd(t_pipex *pipex)
+{
+	close(pipex->pipe_fds[0]);
+	close(pipex->pipe_fds[1]);
+	ft_pipex_error("pipex: fork failed", 1);
 }
