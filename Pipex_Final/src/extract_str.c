@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/03/05 13:59:41 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/09 12:42:40 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,9 @@ char	*extract_str(char *cmd, int *i)
 	return (buf.result);
 }
 
-// Check if the character is a quote character
-static void	check_quote(char *quote, char c)
-{
-	if (*quote == 0 && (c == '\'' || c == '\"'))
-		*quote = c;
-	else if (*quote == c)
-		*quote = 0;
-}
-
 // skip_quotes detects the " and sets active quote to "
 static void	skip_quotes(char *cmd, int *i, char *quote)
 {
-	*quote = 0;
 	if (cmd[*i] == '\'' || cmd[*i] == '\"')
 	{
 		*quote = cmd[*i];
@@ -123,4 +113,13 @@ int	count_cmds(char *cmd)
 		}
 	}
 	return (cmd_count);
+}
+
+// Check if the character is a quote character
+static void	check_quote(char *quote, char c)
+{
+	if (*quote == 0 && (c == '\'' || c == '\"'))
+		*quote = c;
+	else if (*quote == c)
+		*quote = 0;
 }

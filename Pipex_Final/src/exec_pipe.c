@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/03 23:07:41 by clu               #+#    #+#             */
-/*   Updated: 2025/03/08 21:07:06 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/09 12:28:49 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,25 +25,27 @@ static void	second_child(t_pipex *pipex, char **argv, char **envp);
 	// Check and return the exit status of the second child process
 int	exec_pipex(t_pipex *pipex, char **argv, char **envp)
 {
-	int	status1;
-	int	status2;
+	int		status1;
+	int		status2;
+	pid_t	pid1;
+	pid_t	pid2;
 
 	if (pipe(pipex->pipe_fds) == -1)
 		ft_pipex_error("pipex: pipe creation failed", 1);
-	pipex->pid1 = fork();
-	if (pipex->pid1 == -1)
+	pid1 = fork();
+	if (pid1 == -1)
 		close_fd(pipex);
-	if (pipex->pid1 == 0)
+	if (pid1 == 0)
 		first_child(pipex, argv, envp);
-	pipex->pid2 = fork();
-	if (pipex->pid2 == -1)
+	pid2 = fork();
+	if (pid2 == -1)
 		close_fd(pipex);
-	if (pipex->pid2 == 0)
+	if (pid2 == 0)
 		second_child(pipex, argv, envp);
 	close(pipex->pipe_fds[0]);
 	close(pipex->pipe_fds[1]);
-	waitpid(pipex->pid1, &status1, 0);
-	waitpid(pipex->pid2, &status2, 0);
+	waitpid(pid1, &status1, 0);
+	waitpid(pid2, &status2, 0);
 	if (WIFEXITED(status2))
 		return (WEXITSTATUS(status2));
 	return (1);

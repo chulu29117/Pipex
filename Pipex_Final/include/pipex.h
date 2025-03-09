@@ -6,7 +6,7 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 16:06:39 by clu               #+#    #+#             */
-/*   Updated: 2025/03/08 21:10:53 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/09 12:14:20 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ typedef struct s_pipex
 	int		infile;
 	int		outfile;
 	char	*cmd_path;
-	pid_t	pid1;
-	pid_t	pid2;
 }	t_pipex;
 
 // Structure for buffer for substrings
@@ -51,9 +49,7 @@ char	*find_path(char *cmd, char **envp);
 // Error handling
 void	ft_pipex_error(const char *msg, int exit_code);
 void	cmd_error(const char *cmd);
-int		valid_cmd(char *cmd);
 void	execve_error(char *cmd);
-char	*check_cmd_errno(char *full_path, int *errno_flag);
 void	free_exit_buffer(char *buffer, int exit_code);
 void	close_fd(t_pipex *pipex);
 
