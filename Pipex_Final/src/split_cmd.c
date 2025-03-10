@@ -6,14 +6,14 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 18:34:33 by clu               #+#    #+#             */
-/*   Updated: 2025/03/04 16:29:27 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/10 09:58:53 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	free_cmds(char **cmds, int count);
 static char	**check_cmd(char *cmd, int *cmd_count);
+static void	free_cmds(char **cmds, int count);
 
 // Extract the string from the command
 	// Validate and allocate memory for the command array

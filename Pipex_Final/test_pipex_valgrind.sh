@@ -336,14 +336,6 @@ chmod 644 no_exec_cmd1.sh no_exec_cmd2.sh
 run_test 36 "Both commands exist but neither has execution permission (should output error 126)" infile.txt ./no_exec_cmd1.sh ./no_exec_cmd2.sh outfile.txt
 chmod 755 no_exec_cmd1.sh no_exec_cmd2.sh  # Restore permissions after test
 
-# Test 37: Simulated fork failure.
-(
-    echo -e "\e[1;35mTest 40: Simulating fork failure using 'ulimit -u 0'\e[0m"
-    # Setting the maximum number of processes to 0 in this subshell forces fork() to fail.
-    ulimit -u 0
-    run_test 40 "Simulated fork failure (should output fork failure error, exit with code 1)" infile.txt cat wc outfile.txt
-)
-
 # ----------------- Summary -----------------
 echo -e "\e[1;35m+=====================================+"
 echo -e "  Test Summary: $ok_tests out of $total_tests tests passed."

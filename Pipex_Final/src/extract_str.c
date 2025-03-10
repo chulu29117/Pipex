@@ -6,15 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 22:49:49 by clu               #+#    #+#             */
-/*   Updated: 2025/03/09 12:42:40 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/10 09:59:22 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static void	check_quote(char *quote, char c);
 static void	skip_quotes(char *cmd, int *i, char *quote);
 static void	prep_substr(char *cmd, int *i, char quote, t_buffer *buf);
+static void	check_quote(char *quote, char c);
 
 // Extract the string from the command
 	// Skip the leading whitespaces

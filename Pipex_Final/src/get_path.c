@@ -6,15 +6,15 @@
 /*   By: clu <clu@student.hive.fi>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/31 10:10:16 by clu               #+#    #+#             */
-/*   Updated: 2025/03/09 12:25:36 by clu              ###   ########.fr       */
+/*   Updated: 2025/03/10 09:59:08 by clu              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
 static char	**get_path_dirs(char **envp);
-static char	*exec_in_path(char *cmd, char **paths);
 static int	valid_cmd(char *cmd);
+static char	*exec_in_path(char *cmd, char **paths);
 static char	*check_cmd_errno(char *full_path, int *errno_flag);
 
 // Find the full path of the command
